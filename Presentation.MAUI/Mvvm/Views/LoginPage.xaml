@@ -7,13 +7,27 @@
              xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
              x:DataType="viewmodels:LoginViewModel"
              
+             Shell.FlyoutBehavior="Disabled"
+             Shell.FlyoutItemIsVisible="False"
+             
              Title="LoginPage">
+
+    
+
+
     <VerticalStackLayout>
         <Label 
             Text="Welcome to .NET MAUI!"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
 
+        <Label Text="Username:" />
+        <Entry Placeholder="Username" Text="{Binding UserLoginModel.Email}" />
+        <Label Text="Password:" />
+        <Entry IsPassword="True" Placeholder="Password" Text="{Binding UserLoginModel.Password}" />
+
+        <Button Text="Login" Command="{Binding GoToHomePageCommand}" />
 
         <Button Text="Register" Command="{Binding GoToRegisterPageCommand}" />
     </VerticalStackLayout>

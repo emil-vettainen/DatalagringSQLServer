@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Presentation.MAUI.Mvvm.Views.HomePage"
+             
+             xmlns:models="clr-namespace:Presentation.MAUI.Mvvm.Models"
+             xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
+             x:DataType="{x:Type viewmodels:HomeViewModel}"
+
+       
+             >
+
+
+    <ContentPage.Resources>
+        <x:String x:Key="user">&#xf007;</x:String>
+        <x:String x:Key="adduser">&#xf234;</x:String>
+        <x:String x:Key="settings">&#xf085;</x:String>
+    </ContentPage.Resources>
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Command="{Binding GoToUserSettingCommand}" >
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FAS" Glyph="{StaticResource settings}" Color="#9880e5" Size="40"/>
+            </ToolbarItem.IconImageSource>
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+
+    <VerticalStackLayout>
+        <Label 
+            Text="Welcome to .NET MAUI!"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+        <Label Text="Välkommen" />
+
+        <Label Text="{Binding UserDetailsModel.FirstName}" />
+
+        <Label Text="{Binding UserDetailsModel.Email}"  />
+
+
+
+        <!--<CollectionView ItemsSource="{Binding UserDetailsModels}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:UserDetailsModel">
+                    <VerticalStackLayout>
+                        <Label Text="{Binding FirstName}"/>
+                    </VerticalStackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>-->
+
+    </VerticalStackLayout>
+</ContentPage>

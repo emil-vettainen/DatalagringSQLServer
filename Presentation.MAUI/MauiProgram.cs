@@ -21,6 +21,7 @@ namespace Presentation.MAUI
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
+                    fonts.AddFont("Font-Awesome-Solid-900.OTF", "FAS");
                 });
 
             builder.Services.AddDbContext<UserDataContexts>(x => x.UseSqlServer(@"Data Source=192.168.50.2;Initial Catalog=user_db_v1;User ID=evettainen;Password=Emil2024!;Trust Server Certificate=True"));
@@ -35,11 +36,17 @@ namespace Presentation.MAUI
             builder.Services.AddScoped<AddressRepository>();
             builder.Services.AddScoped<RoleRepository>();
 
-            builder.Services.AddSingleton<LoginPage>();
-            builder.Services.AddSingleton<LoginViewModel>();
+            builder.Services.AddTransient<LoginPage>();
+            builder.Services.AddTransient<LoginViewModel>();
 
-            builder.Services.AddSingleton<RegisterPage>();
-            builder.Services.AddSingleton<RegisterViewModel>();
+            builder.Services.AddTransient<RegisterPage>();
+            builder.Services.AddTransient<RegisterViewModel>();
+
+            builder.Services.AddTransient<HomePage>();
+            builder.Services.AddTransient<HomeViewModel>();
+
+            builder.Services.AddTransient<UserDetailPage>();
+            builder.Services.AddTransient<UserDetailViewModel>();
 
 
             builder.Logging.AddDebug();

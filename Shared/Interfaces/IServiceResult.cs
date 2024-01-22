@@ -1,6 +1,6 @@
 ﻿using Shared.Enums;
 
-namespace Shared.Interfaces
+namespace Shared.Responses
 {
     public interface IServiceResult
     {
