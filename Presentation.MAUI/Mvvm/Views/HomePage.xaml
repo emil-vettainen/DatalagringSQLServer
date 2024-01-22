@@ -28,14 +28,10 @@
 
     <VerticalStackLayout>
         <Label 
-            Text="Welcome to .NET MAUI!"
+            Text="{Binding UserDetailsModel.FirstName, StringFormat=Welcome {0}!}"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-        <Label Text="Välkommen" />
-
-        <Label Text="{Binding UserDetailsModel.FirstName}" />
-
-        <Label Text="{Binding UserDetailsModel.Email}"  />
+      
 
 
 

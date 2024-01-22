@@ -1,66 +1,109 @@
-﻿using Business.Services.UserServices;
+﻿using Business.Dtos;
+using Business.Services.UserServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Presentation.MAUI.Mvvm.Models;
 using Presentation.MAUI.Mvvm.Views;
+using Shared.Enums;
 using Shared.Helper;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace Presentation.MAUI.Mvvm.ViewModels
+
+namespace Presentation.MAUI.Mvvm.ViewModels;
+
+public partial class UserDetailViewModel : ObservableObject
 {
-    [QueryProperty(nameof(UserDetailsModel), nameof(UserDetailsModel))]
-    public partial class UserDetailViewModel : ObservableObject
+
+    private readonly UserService _userService;
+
+    public UserDetailViewModel(UserService userService)
     {
+        _userService = userService;
+    }
 
-        private readonly UserService _userService;
 
-        public UserDetailViewModel(UserService userService)
+    [ObservableProperty]
+    bool _isBusy = false;
+
+
+
+    [ObservableProperty]
+    UserDetailsModel userDetailsModel = new();
+
+
+    public async Task ShowUserFirstName()
+    {
+        var user = await _userService.GetUserDetailsAsync(AppState.UserId);
+
+        if (user != null)
         {
-            _userService = userService;
-            ShowUserFirstName().ConfigureAwait(false);
+            UserDetailsModel.Id = user.Id;
+            UserDetailsModel.FirstName = user.FirstName;
+            UserDetailsModel.LastName = user.LastName;
+            UserDetailsModel.StreetName = user.StreetName;
+            UserDetailsModel.PostalCode = user.PostalCode;
+            UserDetailsModel.City = user.City;
+            UserDetailsModel.RoleName = user.RoleName;
         }
+    }
 
-        [ObservableProperty]
-        UserDetailsModel userDetailsModel = new();
-
-
-        public async Task ShowUserFirstName()
+    [RelayCommand]
+    async Task DeleteUser()
+    {
+        var answer = await Shell.Current.DisplayAlert("Warning!", "Are you sure you want to delete the contact?\nThis action cannot be undone.", "Ok", "Cancel");
+        if(answer)
         {
+            var result = await _userService.DeleteUserByIdAsync(AppState.UserId);
 
-          
-
-            var user = await _userService.GetUserDetailsAsync(AppState.UserId);
-
-            if (user != null)
+            switch (result.Status)
             {
+                case ResultStatus.Deleted:
+                    IsBusy = true;
+                    await Task.Delay(2000);
+                    IsBusy = false;
+                    await Shell.Current.GoToAsync($"//{nameof(LoginPage)}", animate: false);
+                    break;
 
-                UserDetailsModel.FirstName = user.FirstName;
-                UserDetailsModel.LastName = user.LastName;
-                UserDetailsModel.StreetName = user.StreetName;
-                UserDetailsModel.PostalCode = user.PostalCode;
-                UserDetailsModel.City = user.City;
-                UserDetailsModel.RoleName = user.RoleName;
-        
-
+                default:
+                    IsBusy = true;
+                    await Task.Delay(2000);
+                    IsBusy = false;
+                    await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
+                    break;
             }
-
-
-
         }
+    }
 
 
-        [RelayCommand]
-        async Task SignOut()
+    [RelayCommand]
+    async Task UpdateUser()
+    {
+        if (!string.IsNullOrWhiteSpace(UserDetailsModel.FirstName))
         {
-            AppState.IsAuthenticated = false;
-            AppState.UserId = Guid.Empty;
-           
-         
-            await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
+            var userUpdateDto = new UserUpdateDto
+            {
+                Id = UserDetailsModel.Id,
+                FirstName = UserDetailsModel.FirstName,
+                LastName = UserDetailsModel.LastName,
+                StreetName = UserDetailsModel.StreetName,
+                PostalCode = UserDetailsModel.PostalCode,
+                City = UserDetailsModel.City,
+                RoleName = UserDetailsModel.RoleName,
+
+            };
+
+            await _userService.UpdateUserAsync(userUpdateDto);
         }
+
+    }
+
+
+    [RelayCommand]
+    async Task SignOut()
+    {
+        AppState.IsAuthenticated = false;
+        AppState.UserId = Guid.Empty;
+       
+     
+        await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
     }
 }

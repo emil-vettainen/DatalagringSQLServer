@@ -49,9 +49,11 @@
         </StackLayout>
 
         <VerticalStackLayout Grid.Row="1" Spacing="10">
-            <Button  Margin="0,20,0,0" FontSize="18" Background="#66B66D" Grid.Column="1" Text="Update" />
-            <Button  FontSize="18" Background="#ff3126" Grid.Column="1" Text="Delete"  />
-           
+            <Button  Margin="0,20,0,0" FontSize="18" Background="#66B66D" Grid.Column="1" Text="Update" Command="{Binding UpdateUserCommand}" />
+            <Button  FontSize="18" Background="#ff3126" Grid.Column="1" Text="Delete" Command="{Binding DeleteUserCommand}"  />
+
+            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
+
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

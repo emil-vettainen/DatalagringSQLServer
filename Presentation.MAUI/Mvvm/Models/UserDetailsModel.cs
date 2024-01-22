@@ -4,8 +4,9 @@ namespace Presentation.MAUI.Mvvm.Models;
 
 public class UserDetailsModel : INotifyPropertyChanged
 {
-
+    public Guid Id { get; set; }
     public DateTime? Created { get; set; }
+    public DateTime? Modified { get; set; }
 
     private string _FirstName = null!;
     public string FirstName

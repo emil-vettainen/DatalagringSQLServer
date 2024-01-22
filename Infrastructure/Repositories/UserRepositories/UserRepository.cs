@@ -18,7 +18,6 @@ public class UserRepository : BaseRepository<UserEntity, UserDataContexts>
         _errorLogger = errorLogger;
     }
 
- 
     public override async Task<UserEntity> GetOneAsync(Expression<Func<UserEntity, bool>> predicate)
     {
         try
@@ -34,11 +33,7 @@ public class UserRepository : BaseRepository<UserEntity, UserDataContexts>
                 return entity;
             }
         }
-        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - GetOneAsync"); }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserRepo - GetOneAsync"); }
         return null!;
     }
-
-   
 }
-
-
