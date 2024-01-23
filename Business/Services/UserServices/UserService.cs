@@ -24,26 +24,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
     private readonly IErrorLogger _errorLogger = errorLogger;
 
 
-    private async Task<int> GetOrCreateRoleAsync(string roleName)
-    {
-        try
-        {
-            var roleExists = await _roleRepository.ExistsAsync(x => x.RoleName == roleName);
-            if (roleExists)
-            {
-                var existingRole = await _roleRepository.GetOneAsync(x => x.RoleName == roleName);
-                return existingRole.Id;
-            }
-            else
-            {
-                var roleEntity = new RoleEntity { RoleName = roleName };
-                var createdRole = await _roleRepository.CreateAsync(roleEntity);
-                return createdRole.Id;
-            }
-        }
-        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
-        return 0;
-    }
+
 
 
     public async Task<IServiceResult> CreateUser(UserRegisterDto userRegisterDto)
@@ -118,7 +99,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
 
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             _result.Status = ResultStatus.Failed;
         }
@@ -168,7 +149,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
     public async Task<IServiceResult> UpdateUserAsync(UserUpdateDto userUpdateDto)
     {
-
         try
         {
             var roleId = await GetOrCreateRoleAsync(userUpdateDto.RoleName);
@@ -202,6 +182,26 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
     }
 
+    private async Task<int> GetOrCreateRoleAsync(string roleName)
+    {
+        try
+        {
+            var roleExists = await _roleRepository.ExistsAsync(x => x.RoleName == roleName);
+            if (roleExists)
+            {
+                var existingRole = await _roleRepository.GetOneAsync(x => x.RoleName == roleName);
+                return existingRole.Id;
+            }
+            else
+            {
+                var roleEntity = new RoleEntity { RoleName = roleName };
+                var createdRole = await _roleRepository.CreateAsync(roleEntity);
+                return createdRole.Id;
+            }
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
+        return 0;
+    }
 
 
     public async Task<IServiceResult> DeleteUserByIdAsync(Guid userId)
@@ -209,23 +209,10 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         try
         {
             var deletedUser = await _userRepository.DeleteAsync(x => x.Id == userId);
-            if (deletedUser)
-            {
-                _result.Status = ResultStatus.Deleted;
-            }
-            else
-            {
-                _result.Status = ResultStatus.NotFound;
-            }
+            _result.Status = deletedUser ? ResultStatus.Deleted : ResultStatus.NotFound;
         }
-        catch (Exception)
-        {
-            _result.Status = ResultStatus.Failed;
-
-        }
+        catch (Exception ex)
+        { _result.Status = ResultStatus.Failed; _errorLogger.ErrorLog(ex.Message, "UserRepo - DeleteUserByIdAsync"); }
         return _result;
     }
-
 }
-
-

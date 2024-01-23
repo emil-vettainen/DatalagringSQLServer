@@ -13,6 +13,8 @@ namespace Presentation.MAUI
             Routing.RegisterRoute(nameof(RegisterPage), typeof(RegisterPage));
             Routing.RegisterRoute(nameof(HomePage), typeof(HomePage));
             Routing.RegisterRoute(nameof(UserDetailPage), typeof(UserDetailPage));
+            Routing.RegisterRoute(nameof(ProductPage), typeof(ProductPage));
+            Routing.RegisterRoute(nameof(AddProductPage), typeof(AddProductPage));
         }
 
         private async void SignOutBtn_Clicked(object sender, EventArgs e)

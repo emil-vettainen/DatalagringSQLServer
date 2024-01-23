@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Presentation.MAUI.Mvvm.Views.ProductPage"
+             
+             xmlns:models="clr-namespace:Presentation.MAUI.Mvvm.Models.ProductModels"
+             xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
+             x:DataType="viewmodels:ProductViewModel"             
+             Title="ProductPage">
+
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Command="{Binding GoToAddProductCommand}" Text="Add Product">
+            
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+
+
+    <Grid RowDefinitions="auto, *" Margin="10">
+
+        <!--<StackLayout Orientation="Horizontal" Margin="6,6,6,8">
+
+            <Label Text="Products" 
+            Margin="8,8,8,0"
+            FontSize="Medium"
+            TextColor="DarkGray"
+            FontAttributes="Bold"/>
+
+            <Label HorizontalOptions="EndAndExpand"
+            Text="See All" 
+            FontAttributes="Bold"
+            Margin="0,8,8,0" 
+            FontSize="16"
+            TextColor="DarkGray"/>
+
+        </StackLayout>-->
+
+
+
+        <CollectionView ItemsSource="{Binding ProductsList}" Grid.Row="1">
+
+            <CollectionView.ItemsLayout>
+                <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="5" VerticalItemSpacing="5" />
+            </CollectionView.ItemsLayout>
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:ProductModel">
+                    <Frame>
+                        <Grid>
+
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="*" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+
+                            <Image Source="dotnet_bot.png"
+                               VerticalOptions="Start"
+                               Aspect="AspectFit"
+                               HeightRequest="100"
+                               Margin="6"
+                               
+                               />
+
+                            <StackLayout Grid.Row="1"
+                               Margin="6"
+                               Orientation="Vertical">
+
+                                <Label VerticalOptions="Center"
+                                   Text="{Binding Title}"
+                                   FontAttributes="Bold" />
+
+                                <Label Text="{Binding Description}"
+                                   VerticalOptions="Start"
+                                   MaxLines="4"
+                                   FontAttributes="Italic" />
+                            </StackLayout>
+
+
+
+
+
+                        </Grid>
+                    </Frame>
+
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+
+    </Grid>
+
+        
+            
+            
+           
+
+
+
+
+
+
+      
+   
+
+
+</ContentPage>

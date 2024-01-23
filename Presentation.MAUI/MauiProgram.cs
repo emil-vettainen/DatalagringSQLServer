@@ -1,5 +1,7 @@
-﻿using Business.Services.UserServices;
+﻿using Business.Services.ProductServices;
+using Business.Services.UserServices;
 using Infrastructure.Contexts;
+using Infrastructure.Repositories.ProductRepositories;
 using Infrastructure.Repositories.UserRepositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -48,6 +50,21 @@ namespace Presentation.MAUI
             builder.Services.AddTransient<UserDetailPage>();
             builder.Services.AddTransient<UserDetailViewModel>();
 
+
+
+            builder.Services.AddDbContext<ProductDataContexts>(x => x.UseSqlServer(@"Data Source=192.168.50.2;Initial Catalog=productcatalog_db_v1;Persist Security Info=True;User ID=evettainen;Password=Emil2024!;Encrypt=True;Trust Server Certificate=True"));
+            builder.Services.AddScoped<ProductService>();
+
+            builder.Services.AddScoped<CategoryRepository>();
+            builder.Services.AddScoped<ManufactureRepository>();
+            builder.Services.AddScoped<ProductPriceRepository>();
+            builder.Services.AddScoped<ProductRepository>();
+
+            builder.Services.AddTransient<ProductPage>();
+            builder.Services.AddTransient<ProductViewModel>();
+
+            builder.Services.AddTransient<AddProductPage>();
+            builder.Services.AddTransient<AddProductViewModel>();
 
             builder.Logging.AddDebug();
             return builder.Build();

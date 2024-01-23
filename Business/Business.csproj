@@ -13,7 +13,6 @@
 
   <ItemGroup>
     <Folder Include="Factories\" />
-    <Folder Include="Services\ProductServices\" />
   </ItemGroup>
 
 </Project>

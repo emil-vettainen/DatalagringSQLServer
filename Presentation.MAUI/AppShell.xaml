@@ -30,6 +30,11 @@
          ContentTemplate="{DataTemplate views:UserDetailPage}"
          Route="UserDetailPage" />
 
+    <ShellContent
+      Title="Product"
+      ContentTemplate="{DataTemplate views:ProductPage}"
+      Route="ProductPage" />
+
     <!--<FlyoutItem>
         <ShellContent
             Title="HomePage"

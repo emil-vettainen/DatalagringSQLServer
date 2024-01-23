@@ -20,7 +20,7 @@
 
   <ItemGroup>
     <Folder Include="Data\" />
-    <Folder Include="Repositories\ProductRepositories\" />
+    <Folder Include="Entities\ProductEntities\" />
   </ItemGroup>
 
   <ItemGroup>

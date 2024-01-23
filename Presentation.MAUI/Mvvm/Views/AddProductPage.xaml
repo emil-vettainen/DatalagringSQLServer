@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Presentation.MAUI.Mvvm.Views.AddProductPage"
+             
+             xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
+             x:DataType="viewmodels:AddProductViewModel"
+             
+             Shell.FlyoutBehavior="Disabled"
+             
+             
+             Title="AddProductPage">
+    <VerticalStackLayout>
+        <ScrollView>
+            <VerticalStackLayout Margin="20">
+                <Label  Text="Category: *" Margin="0,0,0,5"  FontSize="16"/>
+                <Entry Text="{Binding CreateProductModel.CategoryName}" FontSize="16" />
+
+                <Label  Text="Articlenumber:" Margin="0,5,0,5"  FontSize="16"/>
+                <Entry  Text="{Binding CreateProductModel.ArticleNumber}"   FontSize="16" />
+
+                <Label  Text="Title: *" Margin="0,5,0,5"  FontSize="16" />
+                <Entry  Text="{Binding CreateProductModel.Title}"   FontSize="16" />
+
+                <Label  Text="Description: *" Margin="0,5,0,5"  FontSize="16"/>
+                <Entry  Text="{Binding CreateProductModel.Description}"   FontSize="16" />
+
+                <Label  Text="Spec: *" Margin="0,5,0,5"  FontSize="16"/>
+                <Entry  Text="{Binding CreateProductModel.Specification}" IsPassword="True"   FontSize="16" />
+
+                <Label  Text="Manufacture:" Margin="0,5,0,5"  FontSize="16"/>
+                <Entry  Text="{Binding CreateProductModel.Manufacture}"   FontSize="16" />
+
+                <Label  Text="Price:" Margin="0,5,0,5"  FontSize="16"/>
+                <Entry  Text="{Binding CreateProductModel.Price}"   FontSize="16" />
+
+                <Button Command="{Binding AddProductCommand}"  Text="Save" Margin="0,30,0,0" Background="#66B66D" FontSize="18" />
+            </VerticalStackLayout>
+        </ScrollView>
+    </VerticalStackLayout>
+</ContentPage>

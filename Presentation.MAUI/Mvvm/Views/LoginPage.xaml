@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Presentation.MAUI.Mvvm.Views.LoginPage"
              
-             
+         
              xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
              x:DataType="viewmodels:LoginViewModel"
              
@@ -16,7 +16,6 @@
 
     <ContentPage.Content>
         <StackLayout Padding="40" VerticalOptions="Center" HorizontalOptions="FillAndExpand" Spacing="10">
-
             <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
             <Label Text="Email:" />
             <Entry Placeholder="Email" Text="{Binding UserLoginModel.Email}" />

@@ -28,7 +28,7 @@
 
     <VerticalStackLayout>
         <Label 
-            Text="{Binding UserDetailsModel.FirstName, StringFormat=Welcome {0}!}"
+            Text="{Binding UserDetailsModel.FirstName, StringFormat='Welcome {0}!'}"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
       
