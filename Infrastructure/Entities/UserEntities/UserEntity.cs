@@ -31,6 +31,9 @@ public class UserEntity
     public virtual ProfileEntity Profile { get; set; } = null!;
 
     public virtual AuthenticationEntity Authentication { get; set; } = null!;
+
+
+    
 }
 
 

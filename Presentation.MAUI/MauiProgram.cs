@@ -60,11 +60,14 @@ namespace Presentation.MAUI
             builder.Services.AddScoped<ProductPriceRepository>();
             builder.Services.AddScoped<ProductRepository>();
 
-            builder.Services.AddTransient<ProductPage>();
-            builder.Services.AddTransient<ProductViewModel>();
+            builder.Services.AddSingleton<ProductPage>();
+            builder.Services.AddSingleton<ProductViewModel>();
 
             builder.Services.AddTransient<AddProductPage>();
             builder.Services.AddTransient<AddProductViewModel>();
+
+            builder.Services.AddTransient<ProductDetailPage>();
+            builder.Services.AddTransient<ProductDetailViewModel>();
 
             builder.Logging.AddDebug();
             return builder.Build();

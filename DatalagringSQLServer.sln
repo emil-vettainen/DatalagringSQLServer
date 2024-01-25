@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{FFD1ACF6-D248-42DC-8FEA-D60FF0A4588B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{FFD1ACF6-D248-42DC-8FEA-D60FF0A4588B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{176B3ACD-BE70-4ACB-BAC2-C896B5BAF600}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared", "Shared\Shared.csproj", "{176B3ACD-BE70-4ACB-BAC2-C896B5BAF600}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Business", "Business\Business.csproj", "{73642057-199F-4636-968A-4D39F6DBDA63}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Business", "Business\Business.csproj", "{73642057-199F-4636-968A-4D39F6DBDA63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.MAUI", "Presentation.MAUI\Presentation.MAUI.csproj", "{F7EECC61-B314-4809-B858-DA87A8935904}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.MAUI", "Presentation.MAUI\Presentation.MAUI.csproj", "{F7EECC61-B314-4809-B858-DA87A8935904}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Dummy", "Dummy\Dummy.csproj", "{8C13E828-6E0B-4128-A0D4-4C27EE5754DB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Dummy", "Dummy\Dummy.csproj", "{8C13E828-6E0B-4128-A0D4-4C27EE5754DB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.WPF", "Presentation.WPF\Presentation.WPF.csproj", "{1D7AF86D-81A9-413E-85A7-7430AA2AAA94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -41,6 +43,10 @@ Global
 		{8C13E828-6E0B-4128-A0D4-4C27EE5754DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C13E828-6E0B-4128-A0D4-4C27EE5754DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C13E828-6E0B-4128-A0D4-4C27EE5754DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D7AF86D-81A9-413E-85A7-7430AA2AAA94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D7AF86D-81A9-413E-85A7-7430AA2AAA94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D7AF86D-81A9-413E-85A7-7430AA2AAA94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D7AF86D-81A9-413E-85A7-7430AA2AAA94}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

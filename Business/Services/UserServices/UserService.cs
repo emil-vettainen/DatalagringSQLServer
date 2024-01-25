@@ -35,72 +35,17 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
             {
                 _result.Status = ResultStatus.AlreadyExist;
             }
-
-
             var roleId = await GetOrCreateRoleAsync(userRegisterDto.RoleName);
+            var addressId = await GetOrCreateAddressAsync(userRegisterDto.StreetName, userRegisterDto.PostalCode, userRegisterDto.City);
+            var userEntity = await CreateUserEntity(roleId, addressId);
+            await CreateProfile(userRegisterDto, userEntity.Id );
+            await CreateAuth(userRegisterDto, userEntity.Id);
 
-            //var roleExists = await _roleRepository.ExistsAsync(x => x.RoleName == userRegisterDto.RoleName);
-            //int roleId;
-
-            //if (roleExists)
-            //{
-            //    var existingRole = await _roleRepository.GetOneAsync(x => x.RoleName == userRegisterDto.RoleName);
-            //    roleId = existingRole.Id;
-            //}
-
-            //else
-            //{
-            //    var roleEntity = new RoleEntity
-            //    {
-            //        RoleName = userRegisterDto.RoleName,
-            //    };
-
-            //    var createdRole = await _roleRepository.CreateAsync(roleEntity);
-            //    roleId = createdRole.Id;
-            //}
-
-
-            var addressEntity = new AddressEntity
-            {
-                StreetName = userRegisterDto.StreetName,
-                PostalCode = userRegisterDto.PostalCode,
-                City = userRegisterDto.City,
-            };
-
-            var createdAddress = await _addressRepository.CreateAsync(addressEntity);
-
-            var userEntity = new UserEntity
-            {
-                Id = userRegisterDto.Id,
-                Created = userRegisterDto.Created,
-                AddressId = createdAddress.Id,
-                RoleId = roleId,
-            };
-
-            await _userRepository.CreateAsync(userEntity);
-
-            var authEntity = new AuthenticationEntity
-            {
-                UserId = userEntity.Id,
-                Email = userRegisterDto.Email,
-                Password = userRegisterDto.Password,
-            };
-
-            await _authenticationRepository.CreateAsync(authEntity);
-
-            var profileEntity = new ProfileEntity
-            {
-                UserId = userEntity.Id,
-                FirstName = userRegisterDto.FirstName,
-                LastName = userRegisterDto.LastName,
-            };
-
-            await _profileRepository.CreateAsync(profileEntity);
-
-
+            _result.Status = ResultStatus.Successed;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            _errorLogger.ErrorLog(ex.Message, "UserService - CreateUser");
             _result.Status = ResultStatus.Failed;
         }
         return _result;
@@ -175,7 +120,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         catch (Exception)
         {
             _result.Status = ResultStatus.Failed;
-            throw;
+          
         }
 
         return _result;
@@ -201,6 +146,79 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
         return 0;
+    }
+
+
+    private async Task<int> GetOrCreateAddressAsync(string streetName, string postalCode, string city)
+    {
+        try
+        {
+            var addressExists = await _addressRepository.ExistsAsync(x => x.StreetName == streetName && x.PostalCode == postalCode && x.City == city);
+            if (addressExists)
+            {
+                var existingAddress = await _addressRepository.GetOneAsync(x => x.StreetName == streetName && x.PostalCode == postalCode && x.City == city);
+                return existingAddress.Id;
+            }
+            else
+            {
+                var addressEntity = new AddressEntity { StreetName = streetName, PostalCode = postalCode, City = city };
+                var createdAddress = await _addressRepository.CreateAsync(addressEntity);
+                return createdAddress.Id;
+            }
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
+        return 0;
+    }
+
+
+    private async Task CreateProfile(UserRegisterDto userRegisterDto, Guid userId)
+    {
+        try
+        {
+            var profileEntity = new ProfileEntity
+            {
+                UserId = userId,
+                FirstName = userRegisterDto.FirstName,
+                LastName = userRegisterDto.LastName,
+            };
+
+            await _profileRepository.CreateAsync(profileEntity);
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
+    }
+
+    private async Task CreateAuth(UserRegisterDto userRegisterDto, Guid userId)
+    {
+        try
+        {
+            var authEntity = new AuthenticationEntity
+            {
+                UserId= userId,
+                Email = userRegisterDto.Email,
+                Password = userRegisterDto.Password,
+            };
+
+            await _authenticationRepository.CreateAsync(authEntity);
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
+    }
+
+    private async Task<UserEntity> CreateUserEntity(int roleId, int addressId)
+    {
+        try
+        {
+            var userEntity = new UserEntity
+            {
+                Id = Guid.NewGuid(),
+                Created = DateTime.Now,
+                RoleId = roleId,
+                AddressId = addressId,
+            };
+
+           return await _userRepository.CreateAsync(userEntity);  
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - ExistsAsync"); }
+        return null!;
     }
 
 

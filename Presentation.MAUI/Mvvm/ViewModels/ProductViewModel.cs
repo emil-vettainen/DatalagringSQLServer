@@ -39,6 +39,15 @@ public partial class ProductViewModel : ObservableObject
     }
 
 
+    [RelayCommand]
+    async Task GoToProductDetail(string articleNumber)
+    {
+        if(articleNumber != null)
+        {
+            await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ArticleNumber={articleNumber}");
+        }
+    }
+
     public async Task LoadProducts()
     {
         ProductsList.Clear();
