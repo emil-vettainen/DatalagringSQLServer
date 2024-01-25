@@ -24,16 +24,20 @@
          ContentTemplate="{DataTemplate views:HomePage}"
          Route="HomePage" />
 
+    <ShellContent
+          Title="Products"
+          ContentTemplate="{DataTemplate views:ProductPage}"
+          Route="ProductPage" />
 
     <ShellContent
-         Title="UserDetails"
+         Title="Settings"
          ContentTemplate="{DataTemplate views:UserDetailPage}"
          Route="UserDetailPage" />
 
-    <ShellContent
-      Title="Product"
-      ContentTemplate="{DataTemplate views:ProductPage}"
-      Route="ProductPage" />
+
+
+
+
 
     <!--<FlyoutItem>
         <ShellContent

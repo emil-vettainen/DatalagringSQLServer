@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Presentation.MAUI.Mvvm.Views.EditProductPage"
+             
+             xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
+             x:DataType="viewmodels:EditProductViewModel"
+             
+             Shell.FlyoutBehavior="Disabled"
+             
+             Title="EditProductPage">
+    <VerticalStackLayout>
+        <Label 
+            Text="{Binding ArticleNumber}"
+            VerticalOptions="Center" 
+            HorizontalOptions="Center" />
+
+        <Button Text="Delete" Command="{Binding DeleteProductCommand}" />
+    </VerticalStackLayout>
+</ContentPage>

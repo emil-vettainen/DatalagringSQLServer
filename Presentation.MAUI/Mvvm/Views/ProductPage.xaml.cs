@@ -10,12 +10,12 @@ public partial class ProductPage : ContentPage
 		BindingContext = viewModel;
 	}
 
-  //  protected override async void OnAppearing()
-  //  {
-  //      base.OnAppearing();
-		//if(BindingContext is ProductViewModel viewModel)
-		//{
-		//	await viewModel.LoadProducts();
-		//}
-  //  }
+	//protected override async void OnAppearing()
+	//{
+	//	base.OnAppearing();
+	//	if (BindingContext is ProductViewModel viewModel)
+	//	{
+	//		await viewModel.LoadProducts();
+	//	}
+	//}
 }

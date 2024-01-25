@@ -77,7 +77,11 @@ public partial class UserDetailViewModel : ObservableObject
     [RelayCommand]
     async Task UpdateUser()
     {
-        if (!string.IsNullOrWhiteSpace(UserDetailsModel.FirstName))
+        if (!string.IsNullOrWhiteSpace(UserDetailsModel.FirstName) &&
+            !string.IsNullOrWhiteSpace(UserDetailsModel.LastName) &&
+            !string.IsNullOrWhiteSpace(UserDetailsModel.StreetName) && 
+            !string.IsNullOrWhiteSpace(UserDetailsModel.PostalCode) && 
+            !string.IsNullOrWhiteSpace(UserDetailsModel.City))
         {
             var userUpdateDto = new UserUpdateDto
             {

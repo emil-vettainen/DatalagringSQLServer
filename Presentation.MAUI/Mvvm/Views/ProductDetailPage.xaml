@@ -6,12 +6,29 @@
              xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
              x:DataType="viewmodels:ProductDetailViewModel"
             
+             Shell.FlyoutBehavior="Disabled"
              
              Title="ProductDetailPage">
+
+    <ContentPage.ToolbarItems >
+        <ToolbarItem Command="{Binding GoToEditProductPageCommand}" Text="EDIT" >
+            
+        </ToolbarItem>
+    </ContentPage.ToolbarItems>
+
+
     <VerticalStackLayout>
         <Label 
-            Text="{Binding ArticleNumber}"
+            Text="{Binding ProductDetail.ArticleNumber}"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
+        
+        <Label 
+             Text="{Binding ProductDetail.Description}"
+             VerticalOptions="Center" 
+             HorizontalOptions="Center" />
+
+
+        
     </VerticalStackLayout>
 </ContentPage>

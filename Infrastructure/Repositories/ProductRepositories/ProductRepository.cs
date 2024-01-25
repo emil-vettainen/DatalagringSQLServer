@@ -2,6 +2,7 @@
 using Infrastructure.Entities.ProductEntities;
 using Microsoft.EntityFrameworkCore;
 using Shared.Interfaces;
+using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories.ProductRepositories
 {
@@ -28,6 +29,23 @@ namespace Infrastructure.Repositories.ProductRepositories
                 }
             }
             catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - GetAllAsync"); }
+            return null!;
+        }
+
+        public override async Task<ProductEntity> GetOneAsync(Expression<Func<ProductEntity, bool>> predicate)
+        {
+            try
+            {
+                var entity = await _context.ProductEntities
+                 
+                    .Include(x => x.ProductPriceEntity)
+                    .FirstOrDefaultAsync(predicate);
+                if (entity != null)
+                {
+                    return entity;
+                }
+            }
+            catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - GetOneAsync"); }
             return null!;
         }
     }

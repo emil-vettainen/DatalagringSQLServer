@@ -9,4 +9,13 @@ public partial class ProductDetailPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
 	}
+
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+		if (BindingContext is ProductDetailViewModel viewModel)
+		{
+            await viewModel.ShowProductDetails();
+		}
+    }
 }

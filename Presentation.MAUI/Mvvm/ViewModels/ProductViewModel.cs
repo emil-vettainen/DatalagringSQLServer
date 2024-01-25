@@ -66,7 +66,7 @@ public partial class ProductViewModel : ObservableObject
               
             };
 
-          
+         
             ProductsList.Add(model);
         }
 
