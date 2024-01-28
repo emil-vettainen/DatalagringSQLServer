@@ -1,7 +1,7 @@
 ﻿using Business.Services.UserServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using Presentation.MAUI.Mvvm.Models;
+using Presentation.MAUI.Mvvm.Models.UserModels;
 using Presentation.MAUI.Mvvm.Views;
 using Shared.Helper;
 using System.Collections.ObjectModel;

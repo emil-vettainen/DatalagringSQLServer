@@ -12,38 +12,40 @@
              Title="UserDetailPage">
 
 
-    <ContentPage.ToolbarItems>
-        <ToolbarItem Text="SignOut" Command="{Binding SignOutCommand}" />
 
-
-    </ContentPage.ToolbarItems>
 
 
 
     <Grid RowDefinitions="auto,auto"   RowSpacing="10" ColumnSpacing="10" Margin="20">
         <StackLayout Grid.Row="0" >
-            <Grid RowDefinitions="auto,auto,auto,auto,auto,auto, auto" ColumnDefinitions="auto,*" ColumnSpacing="10" RowSpacing="10">
+            <Grid RowDefinitions="auto,auto,auto,auto,auto,auto,auto" ColumnDefinitions="auto,*" ColumnSpacing="10" RowSpacing="10">
 
-                <Label Grid.Column="0" Text="Firstname:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Text="{Binding UserDetailsModel.FirstName}" FontSize="16" />
+                <Label Grid.Column="0" Grid.Row="0" Text="Role:" VerticalOptions="Center"/>
+                <Picker Grid.Column="1" Grid.Row="0"
+                        SelectedIndex="{Binding UserDetailsModel.SlecectedRoleIndex, Mode=TwoWay}" 
+                        ItemsSource="{Binding Roles}" 
+                        />
+                
 
-                <Label Grid.Column="0" Grid.Row="1" Text="Lastname:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding UserDetailsModel.LastName}" FontSize="16" />
+                <Label Grid.Column="0" Grid.Row="1" Text="Firstname:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding UserDetailsModel.FirstName}"/>
 
-                <Label Grid.Column="0" Grid.Row="2" Text="Streetname:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="2" Text="{Binding UserDetailsModel.StreetName}" FontSize="16" />
+                <Label Grid.Column="0" Grid.Row="2" Text="Lastname:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Grid.Row="2" Text="{Binding UserDetailsModel.LastName}"/>
 
-                <Label Grid.Column="0" Grid.Row="3" Text="Postalcode:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="3" Text="{Binding UserDetailsModel.PostalCode}" FontSize="16" />
+                <Label Grid.Column="0" Grid.Row="3" Text="Streetname:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Grid.Row="3" Text="{Binding UserDetailsModel.StreetName}" FontSize="16" />
 
-                <Label Grid.Column="0" Grid.Row="4" Text="City:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="4" Text="{Binding UserDetailsModel.City}" FontSize="16" />
+                <Label Grid.Column="0" Grid.Row="4" Text="Postalcode:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Grid.Row="4" Text="{Binding UserDetailsModel.PostalCode}"/>
 
-                <Label Grid.Column="0" Grid.Row="5" Text="Role:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.RoleName}" FontSize="16" />
+                <Label Grid.Column="0" Grid.Row="5" Text="City:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.City}"/>
 
-                <Label Grid.Column="0" Grid.Row="6" Text="?:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="6" Text="" FontSize="16" />
+                <!--<Label Grid.Column="0" Grid.Row="5" Text="Role:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
+                <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.RoleName}" FontSize="16" />-->
+
+             
 
             </Grid>
         </StackLayout>

@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(UserDataContexts))]
-    [Migration("20240120140024_Init")]
+    [DbContext(typeof(UserDataContext))]
+    [Migration("20240128114614_Init")]
     partial class Init
     {
         /// <inheritdoc />
@@ -34,12 +34,15 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PostalCode")
+                        .IsRequired()
                         .HasColumnType("char(6)");
 
                     b.Property<string>("StreetName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");

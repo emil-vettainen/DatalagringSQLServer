@@ -38,7 +38,13 @@
 
 
 
-        <CollectionView ItemsSource="{Binding ProductsList}" Grid.Row="1">
+        <CollectionView ItemsSource="{Binding GroupedProductList}" Grid.Row="1" IsGrouped="True">
+
+            <CollectionView.GroupHeaderTemplate>
+                <DataTemplate x:DataType="models:ProductGroup">
+                    <Label Text="{Binding CategoryName}" />
+                </DataTemplate>
+            </CollectionView.GroupHeaderTemplate>
 
             <CollectionView.ItemsLayout>
                 <GridItemsLayout Orientation="Vertical" Span="2" HorizontalItemSpacing="5" VerticalItemSpacing="5" />
@@ -63,23 +69,39 @@
                                Aspect="AspectFit"
                                HeightRequest="100"
                                Margin="6"
-                               
                                />
+
+
+                          
 
                             <StackLayout Grid.Row="1"
                                Margin="6"
                                Orientation="Vertical">
 
+                              
+
                                 <Label VerticalOptions="Center"
-                                   Text="{Binding Title}"
+                                   Text="{Binding SubCategoryName}"
                                    FontAttributes="Bold" />
+
+                                <Label VerticalOptions="Center"
+                                    Text="{Binding Title}"
+                                    FontAttributes="Bold" />
 
                                 <Label Text="{Binding Description}"
                                    VerticalOptions="Start"
-                                   MaxLines="4"
+                                   
                                    FontAttributes="Italic" />
+
+                                <Label Text="{Binding Price ,StringFormat='{0:N2} SEK'}"
+                                   HorizontalOptions="End"
+                                   
+                                   FontAttributes="Italic" />
+
+
                             </StackLayout>
 
+                            
 
 
 

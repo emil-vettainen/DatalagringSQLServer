@@ -6,36 +6,42 @@
              xmlns:views="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
              x:DataType="views:RegisterViewModel"
              
-             Title="RegisterPage">
+             Shell.FlyoutBehavior="Disabled"
+             
+             Title="Register new user">
 
     <ContentPage.Content>
         <ScrollView>
             <VerticalStackLayout Margin="20">
-                <Label  Text="Firstname: *" Margin="0,0,0,5"  FontSize="16"/>
-                <Entry Text="{Binding UserRegister.FirstName}" FontSize="16" />
 
-                <Label  Text="Lastname: *" Margin="0,5,0,5"  FontSize="16" />
-                <Entry  Text="{Binding UserRegister.LastName}"   FontSize="16" />
+                <Label Text="Role: * (choose one)" Margin="0,5,0,5"/>
+                <Picker SelectedItem="{Binding UserRegister.RoleName, Mode=TwoWay}" 
+                        ItemsSource="{Binding Roles}" 
+                        FontSize="16" />
 
-                <Label  Text="Email: *" Margin="0,5,0,5"  FontSize="16"/>
-                <Entry  Text="{Binding UserRegister.Email}"   FontSize="16" />
+                <Label  Text="Firstname: *" Margin="0,0,0,5"/>
+                <Entry Text="{Binding UserRegister.FirstName}"/>
 
-                <Label  Text="Password: *" Margin="0,5,0,5"  FontSize="16"/>
-                <Entry  Text="{Binding UserRegister.Password}" IsPassword="True"   FontSize="16" />
+                <Label  Text="Lastname: *" Margin="0,5,0,5"/>
+                <Entry  Text="{Binding UserRegister.LastName}"/>
 
-                <Label  Text="Streetname:" Margin="0,5,0,5"  FontSize="16"/>
-                <Entry  Text="{Binding UserRegister.StreetName}"   FontSize="16" />
+                <Label  Text="Email: *" Margin="0,5,0,5"/>
+                <Entry  Text="{Binding UserRegister.Email}"/>
 
-                <Label  Text="Postalcode:" Margin="0,5,0,5"  FontSize="16"/>
-                <Entry  Text="{Binding UserRegister.PostalCode}"   FontSize="16" />
+                <Label  Text="Password: *" Margin="0,5,0,5" />
+                <Entry  Text="{Binding UserRegister.Password}" IsPassword="True"/>
 
-                <Label  Text="City:" Margin="0,5,0,5"  FontSize="16"/>
-                <Entry  Text="{Binding UserRegister.City}"   FontSize="16" />
+                <Label  Text="Streetname: *" Margin="0,5,0,5"/>
+                <Entry  Text="{Binding UserRegister.StreetName}"/>
 
-                <Label  Text="Role: * (example: Admin)" Margin="0,5,0,5"  FontSize="16"/>
-                <Entry  Text="{Binding UserRegister.RoleName}"   FontSize="16" />
+                <Label  Text="Postalcode: *" Margin="0,5,0,5"/>
+                <Entry  Text="{Binding UserRegister.PostalCode}"/>
+
+                <Label  Text="City: *" Margin="0,5,0,5"/>
+                <Entry  Text="{Binding UserRegister.City}"/>
 
                 <Button Command="{Binding RegisterUserCommand}"  Text="Save" Margin="0,30,0,0" Background="#66B66D" FontSize="18" />
+                
             </VerticalStackLayout>
         </ScrollView>
     </ContentPage.Content>

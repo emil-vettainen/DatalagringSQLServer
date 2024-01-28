@@ -24,8 +24,9 @@ public partial class EditProductViewModel : ObservableObject
         if (ArticleNumber != null)
         {
             await _productService.DeleteProductByArticleNumber(ArticleNumber);
-            await Shell.Current.GoToAsync("..");
+            await Shell.Current.GoToAsync("../..");
         }
     }
+
 
 }

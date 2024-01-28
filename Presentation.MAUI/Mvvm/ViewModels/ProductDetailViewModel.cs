@@ -40,7 +40,7 @@ public partial class ProductDetailViewModel : ObservableObject
                     ArticleNumber = productDetail.ArticleNumber,
                     Specification = productDetail.Specification,
                     Description = productDetail.Description,
-                    Manufacture = productDetail.Manufacture
+                    Manufacture = productDetail.ManufactureName,
                 };
 
                 ProductDetail = detail;
@@ -57,7 +57,7 @@ public partial class ProductDetailViewModel : ObservableObject
     {
         if(ArticleNumber != null)
         {
-            await Shell.Current.GoToAsync($"EditProductPage?ArticleNumber={ArticleNumber}");
+            await Shell.Current.GoToAsync($"/EditProductPage?ArticleNumber={ArticleNumber}");
         }
         
     }

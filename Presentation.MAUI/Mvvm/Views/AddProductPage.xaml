@@ -10,11 +10,14 @@
              
              
              Title="AddProductPage">
-    <VerticalStackLayout>
+    
         <ScrollView>
             <VerticalStackLayout Margin="20">
                 <Label  Text="Category: *" Margin="0,0,0,5"  FontSize="16"/>
                 <Entry Text="{Binding CreateProductModel.CategoryName}" FontSize="16" />
+
+                <Label  Text="SubCategory: *" Margin="0,0,0,5"  FontSize="16"/>
+                <Entry Text="{Binding CreateProductModel.SubCategoryName}" FontSize="16" />
 
                 <Label  Text="Articlenumber:" Margin="0,5,0,5"  FontSize="16"/>
                 <Entry  Text="{Binding CreateProductModel.ArticleNumber}"   FontSize="16" />
@@ -37,5 +40,5 @@
                 <Button Command="{Binding AddProductCommand}"  Text="Save" Margin="0,30,0,0" Background="#66B66D" FontSize="18" />
             </VerticalStackLayout>
         </ScrollView>
-    </VerticalStackLayout>
+  
 </ContentPage>

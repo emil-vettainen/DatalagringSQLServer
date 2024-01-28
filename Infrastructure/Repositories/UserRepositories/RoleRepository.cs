@@ -5,11 +5,11 @@ using Shared.Interfaces;
 
 namespace Infrastructure.Repositories.UserRepositories;
 
-public class RoleRepository : BaseRepository<RoleEntity, UserDataContexts>
+public class RoleRepository : BaseRepository<RoleEntity, UserDataContext>
 {
-    private readonly UserDataContexts _context;
+    private readonly UserDataContext _context;
     private readonly IErrorLogger _errorLogger;
-    public RoleRepository(UserDataContexts context, IErrorLogger errorLogger) : base(context, errorLogger)
+    public RoleRepository(UserDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
     {
         _context = context;
         _errorLogger = errorLogger;

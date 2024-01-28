@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Infrastructure.Migrations
 {
-    [DbContext(typeof(UserDataContexts))]
-    partial class UserDataContextsModelSnapshot : ModelSnapshot
+    [DbContext(typeof(UserDataContext))]
+    partial class UserDataContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -31,12 +31,15 @@ namespace Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("City")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("PostalCode")
+                        .IsRequired()
                         .HasColumnType("char(6)");
 
                     b.Property<string>("StreetName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("Id");

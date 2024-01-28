@@ -17,9 +17,9 @@ namespace Infrastructure.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    StreetName = table.Column<string>(type: "nvarchar(50)", nullable: true),
-                    PostalCode = table.Column<string>(type: "char(6)", nullable: true),
-                    City = table.Column<string>(type: "nvarchar(50)", nullable: true)
+                    StreetName = table.Column<string>(type: "nvarchar(50)", nullable: false),
+                    PostalCode = table.Column<string>(type: "char(6)", nullable: false),
+                    City = table.Column<string>(type: "nvarchar(50)", nullable: false)
                 },
                 constraints: table =>
                 {

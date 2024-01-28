@@ -9,6 +9,10 @@
              Shell.FlyoutBehavior="Disabled"
              
              Title="EditProductPage">
+
+
+    
+    
     <VerticalStackLayout>
         <Label 
             Text="{Binding ArticleNumber}"

@@ -38,9 +38,10 @@ public partial class AddProductViewModel : ObservableObject
                 Title = CreateProductModel.Title,
                 Description = CreateProductModel.Description,
                 Specification = CreateProductModel.Specification,
-                Manufacture = CreateProductModel.Manufacture,
+                ManufactureName = CreateProductModel.Manufacture,
                 CategoryName = CreateProductModel.CategoryName,
                 Price = CreateProductModel.Price,
+                SubCategoryName = CreateProductModel.SubCategoryName,
             };
 
 

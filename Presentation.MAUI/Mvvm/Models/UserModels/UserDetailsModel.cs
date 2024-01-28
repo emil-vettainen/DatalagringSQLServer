@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace Presentation.MAUI.Mvvm.Models;
+namespace Presentation.MAUI.Mvvm.Models.UserModels;
 
 public class UserDetailsModel : INotifyPropertyChanged
 {
@@ -88,6 +88,19 @@ public class UserDetailsModel : INotifyPropertyChanged
             RaisePropertyChanged(nameof(RoleName));
         }
     }
+
+    private int _selectedRoleIndex;
+    public int SlecectedRoleIndex
+    {
+        get { return _selectedRoleIndex; }
+        set
+        {
+            _selectedRoleIndex = value;
+            RaisePropertyChanged(nameof(SlecectedRoleIndex));
+        }
+    }
+
+
 
     public event PropertyChangedEventHandler? PropertyChanged;
     public void RaisePropertyChanged(string propertyName)

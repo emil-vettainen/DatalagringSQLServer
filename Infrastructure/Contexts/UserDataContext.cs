@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Contexts;
 
-public partial class UserDataContexts : DbContext
+public partial class UserDataContext : DbContext
 {
-    public UserDataContexts(DbContextOptions<UserDataContexts> options) : base(options)
+    public UserDataContext(DbContextOptions<UserDataContext> options) : base(options)
     {
     }
 
-    protected UserDataContexts()
+    protected UserDataContext()
     {
     }
 

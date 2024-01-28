@@ -10,9 +10,18 @@
              
              Title="ProductDetailPage">
 
+
+    <ContentPage.Resources>
+        <x:String x:Key="user">&#xf007;</x:String>
+        <x:String x:Key="adduser">&#xf234;</x:String>
+        <x:String x:Key="edit">&#xf044;</x:String>
+    </ContentPage.Resources>
+
     <ContentPage.ToolbarItems >
         <ToolbarItem Command="{Binding GoToEditProductPageCommand}" Text="EDIT" >
-            
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FAS" Glyph="{StaticResource edit}" Color="#9880e5"/>
+            </ToolbarItem.IconImageSource>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
 

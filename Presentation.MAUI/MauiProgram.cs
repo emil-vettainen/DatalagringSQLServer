@@ -26,7 +26,7 @@ namespace Presentation.MAUI
                     fonts.AddFont("Font-Awesome-Solid-900.OTF", "FAS");
                 });
 
-            builder.Services.AddDbContext<UserDataContexts>(x => x.UseSqlServer(@"Data Source=192.168.50.2;Initial Catalog=user_db_v1;User ID=evettainen;Password=Emil2024!;Trust Server Certificate=True"));
+            builder.Services.AddDbContext<UserDataContext>(x => x.UseSqlServer(@"Data Source=192.168.50.2;Initial Catalog=user_db_v1;User ID=evettainen;Password=Emil2024!;Trust Server Certificate=True"));
             
             builder.Services.AddScoped<UserService>();
 

@@ -42,38 +42,84 @@ public partial class ProductViewModel : ObservableObject
     [RelayCommand]
     async Task GoToProductDetail(string articleNumber)
     {
-        if(articleNumber != null)
+        if (articleNumber != null)
         {
             await Shell.Current.GoToAsync($"{nameof(ProductDetailPage)}?ArticleNumber={articleNumber}");
         }
     }
 
+
+    [ObservableProperty]
+    ObservableCollection<ProductGroup> _groupedProductList = [];
+
+
+
+    //public async Task LoadProducts()
+    //{
+    //    ProductsList.Clear();
+
+    //    var productDtos = await _productService.GetAllProductsAsync();
+    //    foreach (var dto in productDtos)
+    //    {
+    //        var model = new ProductModel
+    //        {
+    //            ArticleNumber = dto.ArticleNumber,
+    //            Title = dto.Title,
+    //            Description = dto.Description,
+    //            CategoryName = dto.CategoryName,
+    //            SubCategoryName = dto.SubCategoryName,
+    //            Manufacture = dto.ManufactureName,
+    //            Specification = dto.Specification,
+    //            Price = dto.Price,
+
+
+    //        };
+
+
+    //        ProductsList.Add(model);
+    //    }
+
+    //}
+
+    [ObservableProperty]
+    ProductGroup _group = [];
+
     public async Task LoadProducts()
     {
-        ProductsList.Clear();
-
         var productDtos = await _productService.GetAllProductsAsync();
-        foreach (var dto in productDtos)
-        {
-            var model = new ProductModel
+
+        // Gruppera produkter efter kategori
+        var groupedData = productDtos
+            .GroupBy(p => p.CategoryName)
+            .Select(group =>
             {
-                ArticleNumber = dto.ArticleNumber,
-                Title = dto.Title,
-                Description = dto.Description,
-                CategoryName = dto.CategoryName,
-                Manufacture = dto.Manufacture,
-                Specification = dto.Specification,
-              
-            };
+                var productGroup = new ProductGroup
+                {
+                    CategoryName = group.Key
+                };
 
-         
-            ProductsList.Add(model);
-        }
+                foreach (var dto in group)
+                {
+                    productGroup.Add(new ProductModel
+                    {
+                        ArticleNumber = dto.ArticleNumber,
+                        Title = dto.Title,
+                        Description = dto.Description,
+                        CategoryName = dto.CategoryName,
+                        SubCategoryName = dto.SubCategoryName,
+                        Manufacture = dto.ManufactureName,
+                        Specification = dto.Specification,
+                        Price = dto.Price,
 
+                    });
+                }
+
+                return productGroup;
+            });
+
+        GroupedProductList = new ObservableCollection<ProductGroup>(groupedData);
     }
-    
 
 
- 
 
 }

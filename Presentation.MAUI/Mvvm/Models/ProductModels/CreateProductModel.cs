@@ -15,5 +15,6 @@ namespace Presentation.MAUI.Mvvm.Models.ProductModels
         public string Manufacture { get; set; } = null!;
         public decimal Price { get; set; }
         public string CategoryName { get; set; } = null!;
+        public string SubCategoryName { get; set; } = null!;
     }
 }

@@ -58,6 +58,7 @@
 
 	<ItemGroup>
 	  <None Remove="Resources\Fonts\Font-Awesome-Solid-900.otf" />
+	  <None Remove="Resources\Images\edit_document.png" />
 	</ItemGroup>
 
 	<ItemGroup>

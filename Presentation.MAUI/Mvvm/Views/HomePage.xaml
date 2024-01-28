@@ -3,47 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Presentation.MAUI.Mvvm.Views.HomePage"
              
-             xmlns:models="clr-namespace:Presentation.MAUI.Mvvm.Models"
+             xmlns:models="clr-namespace:Presentation.MAUI.Mvvm.Models.UserModels"
              xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
-             x:DataType="{x:Type viewmodels:HomeViewModel}"
-
-       
-             >
+             x:DataType="{x:Type viewmodels:HomeViewModel}" >
 
 
-    <ContentPage.Resources>
-        <x:String x:Key="user">&#xf007;</x:String>
-        <x:String x:Key="adduser">&#xf234;</x:String>
-        <x:String x:Key="settings">&#xf085;</x:String>
-    </ContentPage.Resources>
-
-    <ContentPage.ToolbarItems >
-        <ToolbarItem Command="{Binding GoToUserSettingCommand}" >
-            <ToolbarItem.IconImageSource>
-                <FontImageSource FontFamily="FAS" Glyph="{StaticResource settings}" Color="#9880e5" Size="40"/>
-            </ToolbarItem.IconImageSource>
-        </ToolbarItem>
-    </ContentPage.ToolbarItems>
+  
 
 
     <VerticalStackLayout>
         <Label 
-            Text="{Binding UserDetailsModel.FirstName, StringFormat='Welcome {0}!'}"
+            Text="{Binding UserDetailsModel.FirstName, StringFormat='Welcome {0}!'}" FontSize="24"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
       
-
-
-
-        <!--<CollectionView ItemsSource="{Binding UserDetailsModels}">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:UserDetailsModel">
-                    <VerticalStackLayout>
-                        <Label Text="{Binding FirstName}"/>
-                    </VerticalStackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>-->
 
     </VerticalStackLayout>
 </ContentPage>

@@ -8,11 +8,11 @@ using System.Linq.Expressions;
 namespace Infrastructure.Repositories.UserRepositories;
 
 
-public class UserRepository : BaseRepository<UserEntity, UserDataContexts>
+public class UserRepository : BaseRepository<UserEntity, UserDataContext>
 {
-    private readonly UserDataContexts _context;
+    private readonly UserDataContext _context;
     private readonly IErrorLogger _errorLogger;
-    public UserRepository(UserDataContexts context, IErrorLogger errorLogger) : base(context, errorLogger)
+    public UserRepository(UserDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
     {
         _context = context;
         _errorLogger = errorLogger;

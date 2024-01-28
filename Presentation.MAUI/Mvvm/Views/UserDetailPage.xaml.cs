@@ -15,7 +15,7 @@ public partial class UserDetailPage : ContentPage
         base.OnAppearing();
         if (BindingContext is UserDetailViewModel viewModel)
         {
-            await viewModel.ShowUserFirstName();
+            await viewModel.ShowUserDetails();
         }
     }
 }

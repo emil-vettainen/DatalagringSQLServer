@@ -1,4 +1,4 @@
-﻿namespace Presentation.MAUI.Mvvm.Models;
+﻿namespace Presentation.MAUI.Mvvm.Models.UserModels;
 
 public class UserLoginModel
 {

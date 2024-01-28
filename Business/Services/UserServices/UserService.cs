@@ -181,36 +181,12 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
             }
 
             await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
-
-            //var user = await _userRepository.GetOneAsync(x => x.Id == userUpdateDto.Id);
-            //if (user != null)
-            //{
-            //    user.RoleId = roleId;
-            //    user.Modified = DateTime.Now;
-            //    await _userRepository.UpdateAsync(x => x.Id == user.Id, user);
-            //}
-
             await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
-
-            //var profile = await _profileRepository.GetOneAsync(x => x.UserId == userUpdateDto.Id);
-            //if (profile != null)
-            //{
-            //    profile.FirstName = userUpdateDto.FirstName;
-            //    profile.LastName = userUpdateDto.LastName;
-
-            //    await _profileRepository.UpdateAsync(x => x.UserId == userUpdateDto.Id, profile);
-            //}
 
             _result.Status = ResultStatus.Updated;
         }
-        catch (Exception)
-        {
-            _result.Status = ResultStatus.Failed;
-          
-        }
-
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); _result.Status = ResultStatus.Failed; }
         return _result;
-
     }
 
 
