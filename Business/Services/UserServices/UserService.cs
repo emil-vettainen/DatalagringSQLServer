@@ -25,7 +25,18 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
   
 
 
+    /*
 
+    public async Task<bool> DeleteUserByIdAsync(string email)
+    {
+
+
+
+    }
+
+
+
+    */
 
 
     public async Task<IServiceResult> LoginAsync(UserLoginDto userLoginDto)
@@ -60,6 +71,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
             }
 
             var roleId = await GetOrCreateRoleAsync(userRegisterDto.RoleName);
+
             var addressId = await GetOrCreateAddressAsync(userRegisterDto.StreetName, userRegisterDto.PostalCode, userRegisterDto.City);
             
             if(roleId == 0 || addressId == 0)
@@ -76,6 +88,9 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - CreateUser"); _result.Status = ResultStatus.Failed; }
         return _result;
     }
+
+
+
 
     private async Task<int> GetOrCreateRoleAsync(string roleName)
     {
@@ -172,6 +187,8 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
     {
         try
         {
+         
+
             var roleId = await GetOrCreateRoleAsync(userUpdateDto.RoleName);
             var addressId = await GetOrCreateAddressAsync(userUpdateDto.StreetName, userUpdateDto.PostalCode, userUpdateDto.City);
 
@@ -182,6 +199,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
             await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
             await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
+            await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
 
             _result.Status = ResultStatus.Updated;
         }
@@ -214,6 +232,20 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         }
     }
 
+    private async Task UpdateAuthEntityAsync(Guid userId, string email, string password)
+    {
+       
+
+        var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
+        if (auth != null)
+        {
+            auth.Email = email;
+            auth.Password = password;
+
+            await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
+        }
+    }
+
 
     public async Task<UserDetailsDto> GetUserDetailsAsync(Guid userId)
     {
@@ -230,7 +262,9 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                     StreetName = user.Address.StreetName,
                     PostalCode = user.Address.PostalCode,
                     City = user.Address.City,
-                    RoleName = user.Role.RoleName
+                    RoleName = user.Role.RoleName,
+                    Email = user.Authentication.Email,
+                    Password = user.Authentication.Password,
                 };
                 return userDetails;
             }

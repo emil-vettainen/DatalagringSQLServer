@@ -13,49 +13,59 @@
 
 
 
+    <ScrollView>
+        <Grid RowDefinitions="auto,auto"   RowSpacing="10" ColumnSpacing="10" Margin="20">
+            <StackLayout Grid.Row="0" >
+                <Grid RowDefinitions="auto,auto,auto,auto,auto,auto,auto, auto, auto" ColumnDefinitions="auto,*" ColumnSpacing="10" RowSpacing="10">
+
+                    <Label Grid.Column="0" Grid.Row="0" Text="Role:" VerticalOptions="Center"/>
+                    <Picker Grid.Column="1" Grid.Row="0"
+                     SelectedIndex="{Binding UserDetailsModel.SlecectedRoleIndex, Mode=TwoWay}" 
+                     ItemsSource="{Binding Roles}" 
+                     />
+
+
+                    <Label Grid.Column="0" Grid.Row="1" Text="Firstname:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="1" Text="{Binding UserDetailsModel.FirstName}"/>
+
+                    <Label Grid.Column="0" Grid.Row="2" Text="Lastname:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="2" Text="{Binding UserDetailsModel.LastName}"/>
+
+                    <Label Grid.Column="0" Grid.Row="3" Text="Streetname:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="3" Text="{Binding UserDetailsModel.StreetName}" FontSize="16" />
+
+                    <Label Grid.Column="0" Grid.Row="4" Text="Postalcode:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="4" Text="{Binding UserDetailsModel.PostalCode}"/>
+
+                    <Label Grid.Column="0" Grid.Row="5" Text="City:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.City}"/>
+
+                    <Label Grid.Column="0" Grid.Row="6" Text="Email:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="6" Text="{Binding UserDetailsModel.Email}"/>
+
+                    <Label Grid.Column="0" Grid.Row="7" Text="Password:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="7" Text="{Binding NewPassword, Mode=TwoWay}" IsPassword="False" />
+                    <Label Grid.Column="1" Grid.Row="8" Text="(leave empty if you dont want to change the password)" />
+
+                    <!--<Label Grid.Column="0" Grid.Row="5" Text="Role:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
+             <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.RoleName}" FontSize="16" />-->
 
 
 
-    <Grid RowDefinitions="auto,auto"   RowSpacing="10" ColumnSpacing="10" Margin="20">
-        <StackLayout Grid.Row="0" >
-            <Grid RowDefinitions="auto,auto,auto,auto,auto,auto,auto" ColumnDefinitions="auto,*" ColumnSpacing="10" RowSpacing="10">
+                </Grid>
+            </StackLayout>
 
-                <Label Grid.Column="0" Grid.Row="0" Text="Role:" VerticalOptions="Center"/>
-                <Picker Grid.Column="1" Grid.Row="0"
-                        SelectedIndex="{Binding UserDetailsModel.SlecectedRoleIndex, Mode=TwoWay}" 
-                        ItemsSource="{Binding Roles}" 
-                        />
-                
+            <VerticalStackLayout Grid.Row="1" Spacing="10">
+                <Button  Margin="0,20,0,0" FontSize="18" Background="#66B66D" Grid.Column="1" Text="Update" Command="{Binding UpdateUserCommand}" />
+                <Button  FontSize="18" Background="#ff3126" Grid.Column="1" Text="Delete" Command="{Binding DeleteUserCommand}"/>
 
-                <Label Grid.Column="0" Grid.Row="1" Text="Firstname:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                <Entry Grid.Column="1" Grid.Row="1" Text="{Binding UserDetailsModel.FirstName}"/>
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
 
-                <Label Grid.Column="0" Grid.Row="2" Text="Lastname:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                <Entry Grid.Column="1" Grid.Row="2" Text="{Binding UserDetailsModel.LastName}"/>
+            </VerticalStackLayout>
+        </Grid>
 
-                <Label Grid.Column="0" Grid.Row="3" Text="Streetname:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                <Entry Grid.Column="1" Grid.Row="3" Text="{Binding UserDetailsModel.StreetName}" FontSize="16" />
+    </ScrollView>
 
-                <Label Grid.Column="0" Grid.Row="4" Text="Postalcode:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                <Entry Grid.Column="1" Grid.Row="4" Text="{Binding UserDetailsModel.PostalCode}"/>
 
-                <Label Grid.Column="0" Grid.Row="5" Text="City:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.City}"/>
-
-                <!--<Label Grid.Column="0" Grid.Row="5" Text="Role:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-                <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.RoleName}" FontSize="16" />-->
-
-             
-
-            </Grid>
-        </StackLayout>
-
-        <VerticalStackLayout Grid.Row="1" Spacing="10">
-            <Button  Margin="0,20,0,0" FontSize="18" Background="#66B66D" Grid.Column="1" Text="Update" Command="{Binding UpdateUserCommand}" />
-            <Button  FontSize="18" Background="#ff3126" Grid.Column="1" Text="Delete" Command="{Binding DeleteUserCommand}"  />
-
-            <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
-
-        </VerticalStackLayout>
-    </Grid>
+   
 </ContentPage>

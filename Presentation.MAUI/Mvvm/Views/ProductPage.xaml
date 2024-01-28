@@ -42,7 +42,9 @@
 
             <CollectionView.GroupHeaderTemplate>
                 <DataTemplate x:DataType="models:ProductGroup">
-                    <Label Text="{Binding CategoryName}" />
+                    <Label Text="{Binding CategoryName}"
+                           FontSize="18"
+                           />
                 </DataTemplate>
             </CollectionView.GroupHeaderTemplate>
 
@@ -52,7 +54,9 @@
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ProductModel">
-                    <Frame>
+                    <Frame BackgroundColor="#8c92ac"  Padding="0" Margin="0">
+                        
+                        
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer CommandParameter="{Binding ArticleNumber}"
                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductViewModel}}, Path=GoToProductDetailCommand}"/>
@@ -61,42 +65,49 @@
 
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="*" />
-                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
                             <Image Source="dotnet_bot.png"
                                VerticalOptions="Start"
                                Aspect="AspectFit"
-                               HeightRequest="100"
-                               Margin="6"
+                               HeightRequest="110"
+                               
+                               
+                             
                                />
 
 
                           
 
                             <StackLayout Grid.Row="1"
-                               Margin="6"
+                               Margin="20"
                                Orientation="Vertical">
 
                               
 
-                                <Label VerticalOptions="Center"
-                                   Text="{Binding SubCategoryName}"
-                                   FontAttributes="Bold" />
+                                
 
                                 <Label VerticalOptions="Center"
                                     Text="{Binding Title}"
-                                    FontAttributes="Bold" />
+                                    FontAttributes="Bold" 
+                                    TextColor="black"
+                                       />
 
-                                <Label Text="{Binding Description}"
+                                <Label Text="{Binding Specification}"
                                    VerticalOptions="Start"
-                                   
+                                   TextColor="black"
                                    FontAttributes="Italic" />
 
-                                <Label Text="{Binding Price ,StringFormat='{0:N2} SEK'}"
-                                   HorizontalOptions="End"
-                                   
-                                   FontAttributes="Italic" />
+                                <StackLayout >
+                                    <Label Text="{Binding Price ,StringFormat='{0:N2} SEK'}"
+                                        HorizontalOptions="End"
+                                        TextColor="black"
+                                        FontAttributes="Italic" />
+
+                                </StackLayout>
+
+                               
 
 
                             </StackLayout>

@@ -21,6 +21,10 @@ public partial class AddProductViewModel : ObservableObject
     [ObservableProperty]
     CreateProductModel _createProductModel = new();
 
+    //[ObservableProperty]
+    //List<string> categories = ["Mobilephones", "Computers", "Network"];
+
+
     [RelayCommand]
     async Task AddProduct()
     {

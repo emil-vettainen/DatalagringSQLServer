@@ -34,14 +34,9 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         var manufactureId = await GetOrCreateManufactureAsync(createProductDto.ManufactureName);
 
 
-      
-
-
-
-       
-
 
         var mainCategory = await GetOrCreateCategoryAsync(createProductDto.CategoryName);
+        
         var subCategory = await GetOrCreateCategoryAsync(createProductDto.SubCategoryName, mainCategory.Id);
 
 
@@ -100,7 +95,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                     Description = x.Description,
                     Specification = x.Specification,
                     ManufactureName = x.Manufacture.Manufacturers,
-                    Price = x.ProductPriceEntity.Price,
+                    Price = x.ProductPriceEntity?.Price ?? 0,
                     CategoryName = mainCategory,
                     SubCategoryName = subCategory,
                 };
@@ -155,7 +150,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
             var categoryExists = await _categoryRepository.ExistsAsync(x => x.CategoryName == categoryName && x.ParentCategoryId == parentCategoryId);
             if (categoryExists)
             {
-                var existingCategory = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
+                var existingCategory = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName && x.ParentCategoryId == parentCategoryId);
                 return existingCategory;
             }
             else

@@ -36,16 +36,23 @@ public partial class UserDetailViewModel : ObservableObject
 
         if (user != null)
         {
+            UserDetailsModel.RoleName = user.RoleName;
+            UserDetailsModel.SlecectedRoleIndex = Roles.IndexOf(UserDetailsModel.RoleName);
             UserDetailsModel.Id = user.Id;
             UserDetailsModel.FirstName = user.FirstName;
             UserDetailsModel.LastName = user.LastName;
             UserDetailsModel.StreetName = user.StreetName;
             UserDetailsModel.PostalCode = user.PostalCode;
             UserDetailsModel.City = user.City;
-            UserDetailsModel.RoleName = user.RoleName;
-            UserDetailsModel.SlecectedRoleIndex = Roles.IndexOf(UserDetailsModel.RoleName);
+            UserDetailsModel.Email = user.Email;
+            UserDetailsModel.Password = user.Password;
+            
         }
     }
+
+    [ObservableProperty]
+    string? _newPassword;
+
 
     [RelayCommand]
     async Task UpdateUser()
@@ -63,12 +70,15 @@ public partial class UserDetailViewModel : ObservableObject
                 var result = await _userService.UpdateUserAsync(new UserUpdateDto
                 {
                     Id = UserDetailsModel.Id,
+                    RoleName = roleName,
                     FirstName = UserDetailsModel.FirstName,
                     LastName = UserDetailsModel.LastName,
                     StreetName = UserDetailsModel.StreetName,
                     PostalCode = UserDetailsModel.PostalCode,
                     City = UserDetailsModel.City,
-                    RoleName = roleName,
+                    Email = UserDetailsModel.Email,
+                    Password = string.IsNullOrWhiteSpace(NewPassword) ? UserDetailsModel.Password : NewPassword
+                    
                 });
 
                 switch (result.Status)
@@ -77,8 +87,12 @@ public partial class UserDetailViewModel : ObservableObject
                         IsBusy = true;
                         await Task.Delay(2000);
                         IsBusy = false;
+                        
                         await Shell.Current.DisplayAlert("Updated!", "User was updated", "Ok");
+                        NewPassword = string.Empty;
                         break;
+
+                    
 
                     default:
                         IsBusy = true;
