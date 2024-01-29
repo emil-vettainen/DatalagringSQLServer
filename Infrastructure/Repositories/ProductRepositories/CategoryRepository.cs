@@ -5,12 +5,12 @@ using Shared.Interfaces;
 
 namespace Infrastructure.Repositories.ProductRepositories
 {
-    public class CategoryRepository : BaseRepository<CategoryEntity, ProductDataContexts>
+    public class CategoryRepository : BaseRepository<CategoryEntity, ProductDataContext>
     {
-        private readonly ProductDataContexts _context;
+        private readonly ProductDataContext _context;
         private readonly IErrorLogger _errorLogger;
 
-        public CategoryRepository(ProductDataContexts context, IErrorLogger errorLogger) : base(context, errorLogger)
+        public CategoryRepository(ProductDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
         {
             _context = context;
             _errorLogger = errorLogger;

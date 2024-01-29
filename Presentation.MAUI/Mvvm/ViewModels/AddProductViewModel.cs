@@ -28,33 +28,49 @@ public partial class AddProductViewModel : ObservableObject
     [RelayCommand]
     async Task AddProduct()
     {
-        if (!string.IsNullOrWhiteSpace(CreateProductModel.ArticleNumber) &&
-            !string.IsNullOrWhiteSpace(CreateProductModel.Title) &&
+        if (!string.IsNullOrWhiteSpace(CreateProductModel.CategoryName) &&
+            !string.IsNullOrWhiteSpace(CreateProductModel.SubCategoryName) &&
+            !string.IsNullOrWhiteSpace(CreateProductModel.ArticleNumber) &&
+            !string.IsNullOrWhiteSpace(CreateProductModel.ProductTitle) &&
+            !string.IsNullOrWhiteSpace(CreateProductModel.Ingress) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Description) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Specification) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Manufacture) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.CategoryName))
 
         {
-            var createProductDto = new CreateProductDto
+            var result = await _productService.CreateProdukt(new CreateProductDto
             {
+                CategoryName = CreateProductModel.CategoryName,
+                SubCategoryName = CreateProductModel.SubCategoryName,
                 ArticleNumber = CreateProductModel.ArticleNumber,
-                Title = CreateProductModel.Title,
+                ProductTitle = CreateProductModel.ProductTitle,
+                Ingress = CreateProductModel.Ingress,
                 Description = CreateProductModel.Description,
                 Specification = CreateProductModel.Specification,
-                ManufactureName = CreateProductModel.Manufacture,
-                CategoryName = CreateProductModel.CategoryName,
+                Manufacture = CreateProductModel.Manufacture,
                 Price = CreateProductModel.Price,
-                SubCategoryName = CreateProductModel.SubCategoryName,
-            };
 
-
-            var result = await _productService.CreateProdukt(createProductDto);
-            if(result)
+            });
+            if (result)
             {
-                
                 await Shell.Current.GoToAsync("..");
             }
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert
+             ("Something went wrong!",
+             "Category is required\n" +
+             "Subcategory is required\n" +
+             "Articlenumber is required\n" +
+             "Product title is required\n" +
+             "Ingress is required\n" +
+             "Description is required\n" +
+             "Specification is required\n" +
+             "Manufacture is required\n" +
+             "Price is required",
+             "Ok");
         }
     }
 }

@@ -17,11 +17,11 @@ public partial class ProductViewModel : ObservableObject
     public ProductViewModel(ProductService productService)
     {
         _productService = productService;
-        LoadProducts().ConfigureAwait(false);
+        LoadProductsAsync().ConfigureAwait(false);
 
         _productService.UpdateProductList += (sender, e) =>
         {
-            LoadProducts().ConfigureAwait(false);
+            LoadProductsAsync().ConfigureAwait(false);
         };
     }
 
@@ -84,7 +84,7 @@ public partial class ProductViewModel : ObservableObject
     [ObservableProperty]
     ProductGroup _group = [];
 
-    public async Task LoadProducts()
+    public async Task LoadProductsAsync()
     {
         var productDtos = await _productService.GetAllProductsAsync();
 

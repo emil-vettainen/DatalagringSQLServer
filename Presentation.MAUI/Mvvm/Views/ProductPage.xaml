@@ -5,7 +5,7 @@
              
              xmlns:models="clr-namespace:Presentation.MAUI.Mvvm.Models.ProductModels"
              xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
-             x:DataType="viewmodels:ProductViewModel"             
+             x:DataType="viewmodels:ProductViewModel"         
              Title="ProductPage">
 
 

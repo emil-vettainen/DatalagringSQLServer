@@ -10,12 +10,12 @@ public partial class ProductDetailPage : ContentPage
 		BindingContext = viewModel;
 	}
 
-    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
-    {
-        base.OnNavigatedTo(args);
+	protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+	{
+		base.OnNavigatedTo(args);
 		if (BindingContext is ProductDetailViewModel viewModel)
 		{
-            await viewModel.ShowProductDetails();
+			await viewModel.ShowProductDetails();
 		}
-    }
+	}
 }

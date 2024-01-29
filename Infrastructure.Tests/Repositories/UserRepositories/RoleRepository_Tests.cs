@@ -29,8 +29,7 @@ public class RoleRepository_Tests
 
         // Assert
         Assert.NotNull(result);
+        Assert.Equal("Admin", result.RoleName);
 
     }
-    
-
 }

@@ -31,25 +31,21 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
             return false;
         }
 
-        var manufactureId = await GetOrCreateManufactureAsync(createProductDto.ManufactureName);
-
+        var manufactureId = await GetOrCreateManufactureAsync(createProductDto.Manufacture);
 
 
         var mainCategory = await GetOrCreateCategoryAsync(createProductDto.CategoryName);
-        
         var subCategory = await GetOrCreateCategoryAsync(createProductDto.SubCategoryName, mainCategory.Id);
-
-
 
 
         var productEntity = new ProductEntity
         {
             ArticleNumber = createProductDto.ArticleNumber,
-            Title = createProductDto.Title,
+            ProductTitle = createProductDto.ProductTitle,
+            Ingress = createProductDto.Ingress,
             Description = createProductDto.Description,
             Specification = createProductDto.Specification,
             ManufactureId = manufactureId,
-           
 
         };
 
@@ -58,15 +54,13 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
 
         var createdProduct = await _productRepository.CreateAsync(productEntity);
 
-        var priceEntity = new ProductPriceEntity
+
+    
+        await _productPriceRepository.CreateAsync(new ProductPriceEntity
         {
             ArticleNumber = createdProduct.ArticleNumber,
             Price = createProductDto.Price,
-        };
-
-
-
-        var price = await _productPriceRepository.CreateAsync(priceEntity);
+        });
 
 
 
@@ -80,34 +74,27 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         var products = await _productRepository.GetAllAsync();
         if (products != null)
         {
-
-           
-
-            var productDto = products.Select(x => 
+            var productDto = products.Select(x =>
             {
                 var mainCategory = x.Categories.FirstOrDefault(x => x.ParentCategoryId == null)?.CategoryName ?? "";
                 var subCategory = x.Categories.FirstOrDefault(x => x.ParentCategoryId != null)?.CategoryName ?? "";
 
                 return new ProductDto
                 {
-                    ArticleNumber = x.ArticleNumber,
-                    Title = x.Title,
-                    Description = x.Description,
-                    Specification = x.Specification,
-                    ManufactureName = x.Manufacture.Manufacturers,
-                    Price = x.ProductPriceEntity?.Price ?? 0,
                     CategoryName = mainCategory,
                     SubCategoryName = subCategory,
+                    ArticleNumber = x.ArticleNumber,
+                    ProductTitle = x.ProductTitle,
+                    Ingess = x.Ingress,
+                    Description = x.Description,
+                    Specification = x.Specification,
+                    Manufacture = x.Manufacture.Manufacturers,
+                    Price = x.ProductPriceEntity?.Price ?? 0,
+                    
                 };
-
-           
-                
             });
-
             return productDto;
         }
-
-
         return Enumerable.Empty<ProductDto>();
     }
 
@@ -119,7 +106,9 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         {
             var productDto = new ProductDto
             {
+                CategoryName = product.
                 ArticleNumber = product.ArticleNumber,
+                ProductTitle = product.ProductTitle,
                 Specification = product.Specification,
                 Description = product.Description,
             };
@@ -178,7 +167,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
             }
             else
             {
-                var manufactureEntity = new ManufactureEntity { Manufacturers = manufactureName};
+                var manufactureEntity = new ManufactureEntity { Manufacturers = manufactureName };
                 var createdManufacture = await _manufacturerRepository.CreateAsync(manufactureEntity);
                 return manufactureEntity.Id;
             }

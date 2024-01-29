@@ -7,7 +7,9 @@ public partial class ProductEntity
 {
     public string ArticleNumber { get; set; } = null!;
 
-    public string Title { get; set; } = null!;
+    public string ProductTitle { get; set; } = null!;
+
+    public string Ingress { get; set; } = null!;
 
     public string Description { get; set; } = null!;
 

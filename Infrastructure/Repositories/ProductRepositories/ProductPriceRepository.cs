@@ -5,12 +5,12 @@ using Shared.Interfaces;
 
 namespace Infrastructure.Repositories.ProductRepositories
 {
-    public class ProductPriceRepository : BaseRepository<ProductPriceEntity, ProductDataContexts>
+    public class ProductPriceRepository : BaseRepository<ProductPriceEntity, ProductDataContext>
     {
-        private readonly ProductDataContexts _context;
+        private readonly ProductDataContext _context;
         private readonly IErrorLogger _errorLogger;
 
-        public ProductPriceRepository(ProductDataContexts context, IErrorLogger errorLogger) : base(context, errorLogger)
+        public ProductPriceRepository(ProductDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
         {
             _context = context;
             _errorLogger = errorLogger;

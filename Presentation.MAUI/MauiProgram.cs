@@ -52,7 +52,7 @@ namespace Presentation.MAUI
 
 
 
-            builder.Services.AddDbContext<ProductDataContexts>(x => x.UseSqlServer(@"Data Source=192.168.50.2;Initial Catalog=productcatalog_db_v1;Persist Security Info=True;User ID=evettainen;Password=Emil2024!;Encrypt=True;Trust Server Certificate=True"));
+            builder.Services.AddDbContext<ProductDataContext>(x => x.UseSqlServer(@"Data Source=192.168.50.2;Initial Catalog=productcatalog_db_v1;Persist Security Info=True;User ID=evettainen;Password=Emil2024!;Encrypt=True;Trust Server Certificate=True"));
             builder.Services.AddScoped<ProductService>();
 
             builder.Services.AddScoped<CategoryRepository>();

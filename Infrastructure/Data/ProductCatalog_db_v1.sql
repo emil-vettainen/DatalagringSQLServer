@@ -14,7 +14,8 @@ CREATE TABLE ManufactureEntity
 CREATE TABLE ProductEntity 
 (
 	ArticleNumber nvarchar(200) NOT NULL PRIMARY KEY,
-	Title nvarchar(100) NOT NULL,
+	ProductTitle nvarchar(100) NOT NULL,
+	Ingress nvarchar(450) NOT NULL,
 	Description nvarchar(max) NOT NULL,
 	Specification nvarchar(max) NOT NULL,
 	ManufactureId int NOT NULL,
@@ -26,7 +27,7 @@ CREATE TABLE ProductPriceEntity
 (
 	ArticleNumber nvarchar(200) NOT NULL PRIMARY KEY,
 	Price money NOT NULL,
-	CONSTRAINT FK_PPE_ProductEntity_ArticleNumber FOREIGN KEY (ArticleNumber) REFERENCES ProductEntity(ArticleNumber)
+	FOREIGN KEY (ArticleNumber) REFERENCES ProductEntity(ArticleNumber)
 )
 
 

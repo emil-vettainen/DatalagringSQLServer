@@ -6,12 +6,12 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories.ProductRepositories
 {
-    public class ProductRepository : BaseRepository<ProductEntity, ProductDataContexts>
+    public class ProductRepository : BaseRepository<ProductEntity, ProductDataContext>
     {
-        private readonly ProductDataContexts _context;
+        private readonly ProductDataContext _context;
         private readonly IErrorLogger _errorLogger;
 
-        public ProductRepository(ProductDataContexts context, IErrorLogger errorLogger) : base(context, errorLogger)
+        public ProductRepository(ProductDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
         {
             _context = context;
             _errorLogger = errorLogger;
@@ -27,7 +27,7 @@ namespace Infrastructure.Repositories.ProductRepositories
                     .Include(x => x.ProductPriceEntity)
                     .Include(x => x.Manufacture)
                     .ToListAsync();
-                if(entities.Count > 0)
+                if (entities.Count > 0)
                 {
                     return entities;
                 }
@@ -41,7 +41,7 @@ namespace Infrastructure.Repositories.ProductRepositories
             try
             {
                 var entity = await _context.ProductEntities
-                 
+
                     .Include(x => x.ProductPriceEntity)
                     .Include(x => x.Categories)
                     .Include(x => x.Manufacture)

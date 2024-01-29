@@ -14,7 +14,7 @@ public partial class ProductDetailViewModel : ObservableObject
     public ProductDetailViewModel(ProductService productService)
     {
         _productService = productService;
-        
+
     }
 
     [ObservableProperty]
@@ -29,11 +29,11 @@ public partial class ProductDetailViewModel : ObservableObject
 
     public async Task ShowProductDetails()
     {
-        if(ArticleNumber != null)
+        if (ArticleNumber != null)
         {
-           var productDetail = await _productService.GetOneProductAsync(ArticleNumber);
+            var productDetail = await _productService.GetOneProductAsync(ArticleNumber);
 
-            if(productDetail != null)
+            if (productDetail != null)
             {
                 var detail = new ProductModel
                 {
@@ -45,7 +45,7 @@ public partial class ProductDetailViewModel : ObservableObject
 
                 ProductDetail = detail;
 
-                
+
             }
         }
 
@@ -55,13 +55,13 @@ public partial class ProductDetailViewModel : ObservableObject
     [RelayCommand]
     async Task GoToEditProductPage()
     {
-        if(ArticleNumber != null)
+        if (ArticleNumber != null)
         {
             await Shell.Current.GoToAsync($"/EditProductPage?ArticleNumber={ArticleNumber}");
         }
-        
+
     }
 
-  
+
 
 }
