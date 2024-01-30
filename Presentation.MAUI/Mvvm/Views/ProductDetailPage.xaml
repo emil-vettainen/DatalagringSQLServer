@@ -8,7 +8,7 @@
             
              Shell.FlyoutBehavior="Disabled"
              
-             Title="ProductDetailPage">
+             Title="{Binding ProductDetail.SubCategoryName}">
 
 
     <ContentPage.Resources>
@@ -26,18 +26,44 @@
     </ContentPage.ToolbarItems>
 
 
-    <VerticalStackLayout>
-        <Label 
-            Text="{Binding ProductDetail.ArticleNumber}"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-        
-        <Label 
-             Text="{Binding ProductDetail.Description}"
-             VerticalOptions="Center" 
-             HorizontalOptions="Center" />
+    <ScrollView>
+
+        <VerticalStackLayout Margin="20">
+
+            <Grid HorizontalOptions="FillAndExpand" ColumnDefinitions="*,auto">
 
 
-        
-    </VerticalStackLayout>
+                <Label Grid.Column="0" Text="{Binding ProductDetail.ProductTitle}" HorizontalOptions="StartAndExpand"/>
+                <Label Grid.Column="1" Text="{Binding ProductDetail.ArticleNumber}" HorizontalOptions="EndAndExpand"/>
+
+            </Grid>
+
+            <Label Text="{Binding ProductDetail.Ingress}" Margin="0,5,0,0"/>
+
+            <Image Source="dotnet_bot.png" Aspect="AspectFit" HeightRequest="170" />
+
+            <Label Text="Price:" Margin="0,20,0,5" FontAttributes="Bold"/>
+            <Label Text="{Binding ProductDetail.Price ,StringFormat='{0:N2} SEK'}"/>
+
+            <Label Text="Description:" Margin="0,20,0,5" FontAttributes="Bold"/>
+            <Label Text="{Binding ProductDetail.Description}"/>
+
+
+            <Label Text="Specification:" Margin="0,20,0,5" FontAttributes="Bold" />
+            <Label Text="{Binding ProductDetail.Specification}"/>
+
+            <Label Text="Manufacture:" Margin="0,20,0,5" FontAttributes="Bold" />
+            <Label Text="{Binding ProductDetail.Manufacture}"/>
+
+
+
+
+
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+
+   
 </ContentPage>

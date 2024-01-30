@@ -37,18 +37,20 @@ public partial class ProductDetailViewModel : ObservableObject
             {
                 var detail = new ProductModel
                 {
+                    CategoryName = productDetail.CategoryName,
+                    SubCategoryName = productDetail.SubCategoryName,
                     ArticleNumber = productDetail.ArticleNumber,
-                    Specification = productDetail.Specification,
+                    ProductTitle = productDetail.ProductTitle,
+                    Ingress = productDetail.Ingess,
                     Description = productDetail.Description,
-                    Manufacture = productDetail.ManufactureName,
+                    Specification = productDetail.Specification,
+                    Manufacture = productDetail.Manufacture,
+                    Price = productDetail.Price,
                 };
 
                 ProductDetail = detail;
-
-
             }
         }
-
     }
 
 

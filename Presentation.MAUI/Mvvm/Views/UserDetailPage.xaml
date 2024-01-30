@@ -40,12 +40,10 @@
                     <Label Grid.Column="0" Grid.Row="5" Text="City:" Margin="0,0,0,0" VerticalOptions="Center"/>
                     <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.City}"/>
 
-                    <Label Grid.Column="0" Grid.Row="6" Text="Email:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                    <Entry Grid.Column="1" Grid.Row="6" Text="{Binding UserDetailsModel.Email}"/>
 
-                    <Label Grid.Column="0" Grid.Row="7" Text="Password:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                    <Entry Grid.Column="1" Grid.Row="7" Text="{Binding NewPassword, Mode=TwoWay}" IsPassword="False" />
-                    <Label Grid.Column="1" Grid.Row="8" Text="(leave empty if you dont want to change the password)" />
+                    <Label Grid.Column="0" Grid.Row="6" Text="Password:" Margin="0,0,0,0" VerticalOptions="Center"/>
+                    <Entry Grid.Column="1" Grid.Row="6" Text="{Binding NewPassword, Mode=TwoWay}" IsPassword="False" />
+                    <Label Grid.Column="1" Grid.Row="7" Text="(leave empty if you dont want to change the password)" />
 
                     <!--<Label Grid.Column="0" Grid.Row="5" Text="Role:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
              <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.RoleName}" FontSize="16" />-->

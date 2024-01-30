@@ -9,6 +9,7 @@ public class RoleRepository : BaseRepository<RoleEntity, UserDataContext>
 {
     private readonly UserDataContext _context;
     private readonly IErrorLogger _errorLogger;
+
     public RoleRepository(UserDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
     {
         _context = context;

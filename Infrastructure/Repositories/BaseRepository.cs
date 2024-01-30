@@ -17,7 +17,7 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
         _errorLogger = errorLogger;
     }
 
-    // If exists (select 1 from tabke where id = 1)
+
     public virtual async Task<bool> ExistsAsync(Expression<Func<TEntity, bool>> predicate)
     {
         try
@@ -30,7 +30,7 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
     }
 
 
-    // Insert into table values (value1, value2)
+
     public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
         try
@@ -43,7 +43,7 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
         return null!;
     }
 
-    // Select * from table
+   
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         try
@@ -102,7 +102,7 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
         return null!;
     }
 
-    // Delete from table where Id = 1
+
     public virtual async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {
         try

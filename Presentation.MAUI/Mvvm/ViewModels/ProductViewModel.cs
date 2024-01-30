@@ -103,11 +103,11 @@ public partial class ProductViewModel : ObservableObject
                     productGroup.Add(new ProductModel
                     {
                         ArticleNumber = dto.ArticleNumber,
-                        Title = dto.Title,
+                        ProductTitle = dto.ProductTitle,
                         Description = dto.Description,
                         CategoryName = dto.CategoryName,
                         SubCategoryName = dto.SubCategoryName,
-                        Manufacture = dto.ManufactureName,
+                        Manufacture = dto.Manufacture,
                         Specification = dto.Specification,
                         Price = dto.Price,
 

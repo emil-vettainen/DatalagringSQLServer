@@ -1,4 +1,5 @@
-﻿using Business.Dtos.ProductDtos;
+﻿using Business.Dtos;
+using Business.Dtos.ProductDtos;
 using Infrastructure.Entities.ProductEntities;
 using Infrastructure.Entities.UserEntities;
 using Infrastructure.Repositories.ProductRepositories;
@@ -76,8 +77,8 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         {
             var productDto = products.Select(x =>
             {
-                var mainCategory = x.Categories.FirstOrDefault(x => x.ParentCategoryId == null)?.CategoryName ?? "";
-                var subCategory = x.Categories.FirstOrDefault(x => x.ParentCategoryId != null)?.CategoryName ?? "";
+                var mainCategory = x.Categories.FirstOrDefault(x => x.ParentCategoryId == null)?.CategoryName!;
+                var subCategory = x.Categories.FirstOrDefault(x => x.ParentCategoryId != null)?.CategoryName!;
 
                 return new ProductDto
                 {
@@ -104,19 +105,100 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         var product = await _productRepository.GetOneAsync(x => x.ArticleNumber == articleNumber);
         if (product != null)
         {
+
             var productDto = new ProductDto
             {
-                CategoryName = product.
+                CategoryName = product.Categories.FirstOrDefault(x => x.ParentCategoryId == null)?.CategoryName!,
+                SubCategoryName = product.Categories.FirstOrDefault(x => x.ParentCategoryId != null)?.CategoryName!,
                 ArticleNumber = product.ArticleNumber,
                 ProductTitle = product.ProductTitle,
+                Ingess = product.Ingress,
                 Specification = product.Specification,
                 Description = product.Description,
+                Manufacture = product.Manufacture.Manufacturers,
+                Price = product.ProductPriceEntity?.Price ?? 0,
             };
 
             return productDto;
         }
         return null!;
     }
+
+
+    public async Task<IServiceResult> UpdateProductAsync(ProductDto productDto)
+    {
+        try
+        {
+            var manufactureId = await GetOrCreateManufactureAsync(productDto.Manufacture);
+            var mainCategory = await GetOrCreateCategoryAsync(productDto.CategoryName);
+            var subCategory = await GetOrCreateCategoryAsync(productDto.SubCategoryName, mainCategory.Id);
+
+            var product = await _productRepository.GetOneAsync(x => x.ArticleNumber == productDto.ArticleNumber);
+            if (product != null)
+            {
+                product.ProductTitle = productDto.ProductTitle;
+                product.Ingress = productDto.Ingess;
+                product.Description = productDto.Description;
+                product.Specification = productDto.Specification;
+                product.ManufactureId = manufactureId;
+            }
+
+            product.Categories.Add(subCategory);
+            product.Categories.Add(mainCategory);
+
+            await _productRepository.UpdateAsync(x => x.ArticleNumber == productDto.ArticleNumber, product);
+
+
+            await UpdateProductPriceEntityAsync(productDto.ArticleNumber, productDto.Price);
+            UpdateProductList?.Invoke(this, EventArgs.Empty);
+            _result.Status = ResultStatus.Updated;
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); _result.Status = ResultStatus.Failed; }
+        return _result;
+    }
+
+
+    private async Task UpdateProductPriceEntityAsync(string articleNumber, decimal price)
+    {
+        var productPrice = await _productPriceRepository.GetOneAsync(x => x.ArticleNumber == articleNumber);
+        if (productPrice != null)
+        {
+            productPrice.ArticleNumber = articleNumber;
+            productPrice.Price = price;
+
+            await _productPriceRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, productPrice);
+
+        }
+    }
+
+    //private async Task UpdateProfileEntityAsync(Guid userId, string firstName, string lastName)
+    //{
+    //    var profile = await _profileRepository.GetOneAsync(x => x.UserId == userId);
+    //    if (profile != null)
+    //    {
+    //        profile.FirstName = firstName;
+    //        profile.LastName = lastName;
+
+    //        await _profileRepository.UpdateAsync(x => x.UserId == userId, profile);
+    //    }
+    //}
+
+    //private async Task UpdateAuthEntityAsync(Guid userId, string email, string password)
+    //{
+
+
+    //    var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
+    //    if (auth != null)
+    //    {
+    //        auth.Email = email;
+    //        auth.Password = password;
+
+    //        await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
+    //    }
+    //}
+
+
+
 
 
     public async Task<IServiceResult> DeleteProductByArticleNumber(string articleNumber)

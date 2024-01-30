@@ -45,6 +45,7 @@ namespace Infrastructure.Repositories.ProductRepositories
                     .Include(x => x.ProductPriceEntity)
                     .Include(x => x.Categories)
                     .Include(x => x.Manufacture)
+                   
                     .FirstOrDefaultAsync(predicate);
                 if (entity != null)
                 {

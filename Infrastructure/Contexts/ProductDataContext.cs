@@ -47,11 +47,11 @@ public partial class ProductDataContext : DbContext
                     "ProductCategoryEntity",
                     r => r.HasOne<ProductEntity>().WithMany()
                         .HasForeignKey("ArticleNumber")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK__ProductCa__Artic__690797E6"),
                     l => l.HasOne<CategoryEntity>().WithMany()
                         .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.ClientSetNull)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .HasConstraintName("FK__ProductCa__Categ__681373AD"),
                     j =>
                     {
@@ -84,7 +84,7 @@ public partial class ProductDataContext : DbContext
 
             entity.HasOne(d => d.Manufacture).WithMany(p => p.ProductEntities)
                 .HasForeignKey(d => d.ManufactureId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ProductEn__Manuf__5F7E2DAC");
         });
 
@@ -99,7 +99,7 @@ public partial class ProductDataContext : DbContext
 
             entity.HasOne(d => d.ArticleNumberNavigation).WithOne(p => p.ProductPriceEntity)
                 .HasForeignKey<ProductPriceEntity>(d => d.ArticleNumber)
-                .OnDelete(DeleteBehavior.ClientSetNull)
+                .OnDelete(DeleteBehavior.Cascade)
                 .HasConstraintName("FK__ProductPr__Artic__625A9A57");
         });
 

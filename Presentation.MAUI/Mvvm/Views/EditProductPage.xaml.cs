@@ -9,4 +9,13 @@ public partial class EditProductPage : ContentPage
 		InitializeComponent();
 		BindingContext = viewModel;
 	}
+    protected override async void OnNavigatedTo(NavigatedToEventArgs args)
+    {
+        base.OnNavigatedTo(args);
+        if (BindingContext is EditProductViewModel viewModel)
+        {
+            await viewModel.ShowEditProductDetails();
+        }
+    }
+
 }
