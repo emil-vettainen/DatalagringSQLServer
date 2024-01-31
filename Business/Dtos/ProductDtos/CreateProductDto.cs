@@ -2,7 +2,7 @@
 
 public class CreateProductDto
 {
-    public string CategoryName { get; set; } = null!;
+    public string? CategoryName { get; set; }
     public string SubCategoryName { get; set; } = null!;
     public string ArticleNumber { get; set; } = null!;
     public string ProductTitle { get; set; } = null!;

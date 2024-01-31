@@ -33,11 +33,11 @@ public class RoleRepository_Tests
     }
 
     [Fact]
-   public async Task CreateRoleAsync_ShouldSaveRecordToDatabase_ReturnRoleEntity()
+   public async Task CreateRoleAsync_ShouldSaveRoleToDatabase_ReturnRoleEntity()
     {
         // Arrange
         var roleRepository = new RoleRepository(_userDataContext, errorLogger);
-        var roleEntity = new RoleEntity { RoleName = "Tester" };
+        var roleEntity = new RoleEntity { RoleName = "Admin" };
 
         // Act
         var result = await roleRepository.CreateAsync(roleEntity);
@@ -48,7 +48,7 @@ public class RoleRepository_Tests
     }
 
     [Fact]
-    public async Task CreateRoleAsync_ShouldNotSaveRecordToDatabase_ReturnNull()
+    public async Task CreateRoleAsync_ShouldNotSaveRoleToDatabase_ReturnNull()
     {
         // Arrange
         var roleRepository = new RoleRepository(_userDataContext, errorLogger);
@@ -59,7 +59,6 @@ public class RoleRepository_Tests
 
         // Assert
         Assert.Null(result);
-        
     }
 
     [Fact]
@@ -108,7 +107,6 @@ public class RoleRepository_Tests
 
         // Assert
         Assert.Null(result);
-       
     }
 
     [Fact]
@@ -133,7 +131,6 @@ public class RoleRepository_Tests
         var roleRepository = new RoleRepository(_userDataContext, errorLogger);
         var roleEntity = new RoleEntity { RoleName = "Admin" };
      
-
         // Act
         var result = await roleRepository.DeleteAsync(x => x.RoleName == roleEntity.RoleName);
 
@@ -148,7 +145,6 @@ public class RoleRepository_Tests
         var roleRepository = new RoleRepository(_userDataContext, errorLogger);
         var roleEntity = new RoleEntity { RoleName = "Admin" };
         roleEntity = await roleRepository.CreateAsync(roleEntity);
-
 
         // Act
         roleEntity.RoleName = "User";

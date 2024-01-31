@@ -187,8 +187,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
     {
         try
         {
-         
-
             var roleId = await GetOrCreateRoleAsync(userUpdateDto.RoleName);
             var addressId = await GetOrCreateAddressAsync(userUpdateDto.StreetName, userUpdateDto.PostalCode, userUpdateDto.City);
 
@@ -197,27 +195,56 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 _result.Status = ResultStatus.Failed;
             }
 
-            await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
-            await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
-            await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
+            var result = await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
 
-            _result.Status = ResultStatus.Updated;
+            if(result)
+            {
+                await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
+
+
+                var updatedAuth = await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
+                _result.Status = updatedAuth ? ResultStatus.Updated : ResultStatus.AlreadyExist;
+            }
+            
+            
+              
+
+                
+            
+
+            
+            
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); _result.Status = ResultStatus.Failed; }
         return _result;
     }
 
 
-    private async Task UpdateUserEntityAsync(Guid userId, int roleId, int addressId)
+    private async Task<bool> UpdateUserEntityAsync(Guid userId, int roleId, int addressId)
     {
-        var user = await _userRepository.GetOneAsync(x => x.Id == userId);
-        if (user != null)
+        //var user = await _userRepository.GetOneAsync(x => x.Id == userId);
+        //if (user != null)
+        //{
+        //    user.RoleId = roleId;
+        //    user.AddressId = addressId;
+        //    user.Modified = DateTime.Now;
+        //    await _userRepository.UpdateAsync(x => x.Id == user.Id, user);
+        //}
+
+        try
         {
-            user.RoleId = roleId;
-            user.AddressId = addressId;
-            user.Modified = DateTime.Now;
-            await _userRepository.UpdateAsync(x => x.Id == user.Id, user);
+            var newUserEntity = await _userRepository.UpdateAsync(x => x.Id == userId, new UserEntity
+            {
+                Id = userId,
+                RoleId = roleId,
+                AddressId = addressId,
+                Modified = DateTime.Now,
+            });
+            return newUserEntity != null;
+ 
         }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserEntityAsync"); }
+        return false;
     }
 
     private async Task UpdateProfileEntityAsync(Guid userId, string firstName, string lastName)
@@ -232,18 +259,25 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         }
     }
 
-    private async Task UpdateAuthEntityAsync(Guid userId, string email, string password)
+    private async Task<bool> UpdateAuthEntityAsync(Guid userId, string email, string password)
     {
-       
-
-        var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
-        if (auth != null)
+        if(!await _authenticationRepository.ExistsAsync(x => x.Email == email))
         {
-            auth.Email = email;
-            auth.Password = password;
+            var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
+            if (auth != null)
+            {
+                auth.Email = email;
+                auth.Password = password;
 
-            await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
+               var result = await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
+                if (result != null)
+                {
+                    return true;
+                }
+            }
         }
+
+        return false;
     }
 
 

@@ -28,15 +28,15 @@ public partial class AddProductViewModel : ObservableObject
     [RelayCommand]
     async Task AddProduct()
     {
-        if (!string.IsNullOrWhiteSpace(CreateProductModel.CategoryName) &&
+        if (
             !string.IsNullOrWhiteSpace(CreateProductModel.SubCategoryName) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.ArticleNumber) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.ProductTitle) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Ingress) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Description) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Specification) &&
-            !string.IsNullOrWhiteSpace(CreateProductModel.Manufacture) &&
-            !string.IsNullOrWhiteSpace(CreateProductModel.CategoryName))
+            !string.IsNullOrWhiteSpace(CreateProductModel.Manufacture))
+           
 
         {
             var result = await _productService.CreateProdukt(new CreateProductDto

@@ -92,7 +92,9 @@ public partial class UserDetailViewModel : ObservableObject
                         NewPassword = string.Empty;
                         break;
 
-                    
+                    case ResultStatus.AlreadyExist:
+                        await Shell.Current.DisplayAlert("Something went wrong!", "Email already exists", "Ok");
+                        break;
 
                     default:
                         IsBusy = true;

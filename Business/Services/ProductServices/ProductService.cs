@@ -16,11 +16,12 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
     private readonly ProductRepository _productRepository = productRepository;
     private readonly ManufactureRepository _manufacturerRepository = manufacturerRepository;
     private readonly ProductPriceRepository _productPriceRepository = productPriceRepository;
-    public EventHandler? UpdateProductList;
 
+   
     private readonly IErrorLogger _errorLogger = errorLogger;
-
     private readonly IServiceResult _result = new ServiceResult();
+
+    public EventHandler? UpdateProductList;
 
 
 
@@ -35,12 +36,12 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         var manufactureId = await GetOrCreateManufactureAsync(createProductDto.Manufacture);
 
 
-        var mainCategory = await GetOrCreateCategoryAsync(createProductDto.CategoryName);
-        var subCategory = await GetOrCreateCategoryAsync(createProductDto.SubCategoryName, mainCategory.Id);
+        var subCategory = await GetOrCreateCategoryAsync(createProductDto.SubCategoryName, createProductDto.CategoryName);
 
 
         var productEntity = new ProductEntity
         {
+            
             ArticleNumber = createProductDto.ArticleNumber,
             ProductTitle = createProductDto.ProductTitle,
             Ingress = createProductDto.Ingress,
@@ -50,8 +51,8 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
 
         };
 
-        productEntity.Categories.Add(subCategory);
-        productEntity.Categories.Add(mainCategory);
+        //productEntity.Categories.Add(subCategory);
+        //productEntity.Categories.Add(mainCategory);
 
         var createdProduct = await _productRepository.CreateAsync(productEntity);
 
@@ -131,7 +132,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         {
             var manufactureId = await GetOrCreateManufactureAsync(productDto.Manufacture);
             var mainCategory = await GetOrCreateCategoryAsync(productDto.CategoryName);
-            var subCategory = await GetOrCreateCategoryAsync(productDto.SubCategoryName, mainCategory.Id);
+            //var subCategory = await GetOrCreateCategoryAsync(productDto.SubCategoryName, mainCategory.Id);
 
             var product = await _productRepository.GetOneAsync(x => x.ArticleNumber == productDto.ArticleNumber);
             if (product != null)
@@ -143,8 +144,8 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                 product.ManufactureId = manufactureId;
             }
 
-            product.Categories.Add(subCategory);
-            product.Categories.Add(mainCategory);
+            //product.Categories.Add(subCategory);
+            //product.Categories.Add(mainCategory);
 
             await _productRepository.UpdateAsync(x => x.ArticleNumber == productDto.ArticleNumber, product);
 
@@ -214,27 +215,92 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         return _result;
     }
 
-    private async Task<CategoryEntity> GetOrCreateCategoryAsync(string categoryName, int? parentCategoryId = null)
+    //private async Task<CategoryEntity> GetOrCreateCategoryAsync(string categoryName)
+    //{
+    //    try
+    //    {
+    //        var categoryExists = await _categoryRepository.ExistsAsync(x => x.CategoryName == categoryName);
+    //        if (categoryExists)
+    //        {
+    //            var existingCategory = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
+    //            return existingCategory;
+    //        }
+    //        else
+    //        {
+    //            var categoryEntity = new CategoryEntity { CategoryName = categoryName};
+    //            var createdCategory = await _categoryRepository.CreateAsync(categoryEntity);
+    //            return createdCategory;
+    //        }
+    //    }
+    //    catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - GetOrCreateCategoryAsync"); }
+    //    return null!;
+    //}
+
+
+    private async Task<CategoryEntity> GetOrCreateCategoryAsync(string subCategoryName, string categoryName = "")
     {
         try
         {
-            var categoryExists = await _categoryRepository.ExistsAsync(x => x.CategoryName == categoryName && x.ParentCategoryId == parentCategoryId);
-            if (categoryExists)
+            var subCategoryEntity = await _categoryRepository.GetOneAsync(x => x.CategoryName == subCategoryName);
+            if (subCategoryEntity == null) 
             {
-                var existingCategory = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName && x.ParentCategoryId == parentCategoryId);
-                return existingCategory;
+                if (!string.IsNullOrEmpty(categoryName))
+                {
+                    var categoryEntity = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
+                    categoryEntity ??= await _categoryRepository.CreateAsync(new CategoryEntity { CategoryName = categoryName });
+
+                    subCategoryEntity = await _categoryRepository.CreateAsync(new CategoryEntity { CategoryName = subCategoryName, ParentCategoryId = categoryEntity.Id });
+                }
+                else
+                {
+                    subCategoryEntity ??= await _categoryRepository.CreateAsync(new CategoryEntity { CategoryName = subCategoryName });
+                }
             }
-            else
-            {
-                var categoryEntity = new CategoryEntity { CategoryName = categoryName, ParentCategoryId = parentCategoryId };
-                var createdCategory = await _categoryRepository.CreateAsync(categoryEntity);
-                return createdCategory;
-            }
+
+            return subCategoryEntity!;
+
+
+
+
+
+
+          
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - GetOrCreateCategoryAsync"); }
         return null!;
     }
 
+
+
+    //private async Task<CategoryEntity> GetOrCreateCategoryAsync(string categoryName, int? parentCategoryId = null)
+    //{
+    //    try
+    //    {
+    //        // Laptop (1    Laptop      null )
+
+    //        var categoryEntity = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
+    //        categoryEntity ??= await _categoryRepository.CreateAsync(new CategoryEntity { CategoryName = categoryName });
+
+
+
+
+
+    //        var categoryExists = await _categoryRepository.ExistsAsync(x => x.CategoryName == categoryName && x.ParentCategoryId == parentCategoryId);
+    //        if (categoryExists)
+    //        {
+    //            var existingCategory = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName && x.ParentCategoryId == parentCategoryId);
+    //            return existingCategory;
+    //        }
+    //        else
+    //        {
+    //            var categoryEntity = new CategoryEntity { CategoryName = categoryName, ParentCategoryId = parentCategoryId };
+    //            var createdCategory = await _categoryRepository.CreateAsync(categoryEntity);
+    //            return createdCategory;
+    //        }
+    //    }
+    //    catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - GetOrCreateCategoryAsync"); }
+    //    return null!;
+    //}
 
 
     private async Task<int> GetOrCreateManufactureAsync(string manufactureName)

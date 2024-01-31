@@ -44,9 +44,9 @@ namespace Presentation.MAUI.Mvvm.ViewModels
                 {
                     case ResultStatus.Successed:
                         UserLoginModel = new();
-                        IsBusy = true;
-                        await Task.Delay(2000);
-                        IsBusy = false;
+                        //IsBusy = true;
+                        //await Task.Delay(2000);
+                        //IsBusy = false;
                         await Shell.Current.GoToAsync($"//{nameof(HomePage)}", animate: false);
                         break;
 
