@@ -8,7 +8,7 @@
             
              Shell.FlyoutBehavior="Disabled"
              
-             Title="{Binding ProductDetail.SubCategoryName}">
+             Title="{Binding ProductDetail.CategoryName}">
 
 
     <ContentPage.Resources>

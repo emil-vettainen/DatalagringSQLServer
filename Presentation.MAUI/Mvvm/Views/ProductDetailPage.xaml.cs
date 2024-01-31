@@ -8,6 +8,7 @@ public partial class ProductDetailPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
+		
 	}
 
 	protected override async void OnNavigatedTo(NavigatedToEventArgs args)

@@ -8,6 +8,5 @@ public partial class AddProductPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
-		
 	}
 }

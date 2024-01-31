@@ -35,7 +35,6 @@ public partial class EditProductViewModel : ObservableObject
                 var detail = new ProductModel
                 {
                     CategoryName = productDetail.CategoryName,
-                    SubCategoryName = productDetail.SubCategoryName,
                     ArticleNumber = productDetail.ArticleNumber,
                     ProductTitle = productDetail.ProductTitle,
                     Ingress = productDetail.Ingess,
@@ -54,46 +53,44 @@ public partial class EditProductViewModel : ObservableObject
     async Task UpdateProduct()
     {
         if (!string.IsNullOrWhiteSpace(UpdateDetail.CategoryName) &&
-            !string.IsNullOrWhiteSpace(UpdateDetail.SubCategoryName) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.ArticleNumber) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.ProductTitle) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.Ingress) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.Description) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.Specification))
-           
+
         {
 
-                var result = await _productService.UpdateProductAsync(new ProductDto
-                {
-                    CategoryName = UpdateDetail.CategoryName,
-                    SubCategoryName = UpdateDetail.SubCategoryName,
-                    ArticleNumber = UpdateDetail.ArticleNumber,
-                    ProductTitle = UpdateDetail.ProductTitle,
-                    Ingess = UpdateDetail.Ingress,
-                    Description = UpdateDetail.Description,
-                    Specification = UpdateDetail.Specification,
-                    Manufacture = UpdateDetail.Manufacture,
-                    Price = UpdateDetail.Price,
+            var result = await _productService.UpdateProductAsync(new ProductDto
+            {
+                CategoryName = UpdateDetail.CategoryName,
+                ArticleNumber = UpdateDetail.ArticleNumber,
+                ProductTitle = UpdateDetail.ProductTitle,
+                Ingess = UpdateDetail.Ingress,
+                Description = UpdateDetail.Description,
+                Specification = UpdateDetail.Specification,
+                Manufacture = UpdateDetail.Manufacture,
+                Price = UpdateDetail.Price,
 
-                });
+            });
 
-                switch (result.Status)
-                {
-                    case ResultStatus.Updated:
-                       
-
-                        await Shell.Current.DisplayAlert("Updated!", "Product was updated", "Ok");
-                       
-                        break;
+            switch (result.Status)
+            {
+                case ResultStatus.Updated:
 
 
+                    await Shell.Current.DisplayAlert("Updated!", "Product was updated", "Ok");
 
-                    default:
-                        
-                        await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
-                        break;
-                }
-            
+                    break;
+
+
+
+                default:
+
+                    await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
+                    break;
+            }
+
         }
     }
 
@@ -103,7 +100,7 @@ public partial class EditProductViewModel : ObservableObject
     {
         if (ArticleNumber != null)
         {
-            await _productService.DeleteProductByArticleNumber(ArticleNumber);
+            await _productService.DeleteProductByArticleNumberAsync(ArticleNumber);
             await Shell.Current.GoToAsync("../..");
         }
     }

@@ -59,6 +59,7 @@ namespace Presentation.MAUI
             builder.Services.AddScoped<ManufactureRepository>();
             builder.Services.AddScoped<ProductPriceRepository>();
             builder.Services.AddScoped<ProductRepository>();
+            builder.Services.AddScoped<ProductInfoRepository>();
 
             builder.Services.AddTransient<ProductPage>();
             builder.Services.AddTransient<ProductViewModel>();

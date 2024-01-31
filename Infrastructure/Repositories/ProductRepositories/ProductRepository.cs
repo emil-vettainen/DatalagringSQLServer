@@ -23,9 +23,11 @@ namespace Infrastructure.Repositories.ProductRepositories
             try
             {
                 var entities = await _context.ProductEntities
-                    .Include(x => x.Categories)
+                    .Include(x => x.ProductInfoEntity)
                     .Include(x => x.ProductPriceEntity)
+                    .Include(x => x.Category)
                     .Include(x => x.Manufacture)
+                    
                     .ToListAsync();
                 if (entities.Count > 0)
                 {
@@ -42,10 +44,9 @@ namespace Infrastructure.Repositories.ProductRepositories
             {
                 var entity = await _context.ProductEntities
 
+                    .Include(x => x.ProductInfoEntity)
                     .Include(x => x.ProductPriceEntity)
-                    .Include(x => x.Categories)
-                    .Include(x => x.Manufacture)
-                   
+
                     .FirstOrDefaultAsync(predicate);
                 if (entity != null)
                 {

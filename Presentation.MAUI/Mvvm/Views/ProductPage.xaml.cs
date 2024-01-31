@@ -8,6 +8,7 @@ public partial class ProductPage : ContentPage
 	{
 		InitializeComponent();
 		BindingContext = viewModel;
+		
 	}
 
 	//protected override async void OnAppearing()

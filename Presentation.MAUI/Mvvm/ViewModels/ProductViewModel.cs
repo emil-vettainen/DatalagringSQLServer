@@ -106,7 +106,6 @@ public partial class ProductViewModel : ObservableObject
                         ProductTitle = dto.ProductTitle,
                         Description = dto.Description,
                         CategoryName = dto.CategoryName,
-                        SubCategoryName = dto.SubCategoryName,
                         Manufacture = dto.Manufacture,
                         Specification = dto.Specification,
                         Price = dto.Price,

@@ -22,6 +22,8 @@ public partial class ProductDataContext : DbContext
 
     public virtual DbSet<ProductEntity> ProductEntities { get; set; }
 
+    public virtual DbSet<ProductInfoEntity> ProductInfoEntities { get; set; }
+
     public virtual DbSet<ProductPriceEntity> ProductPriceEntities { get; set; }
 
 //    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -32,65 +34,64 @@ public partial class ProductDataContext : DbContext
     {
         modelBuilder.Entity<CategoryEntity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC073D54524D");
+            entity.HasKey(e => e.Id).HasName("PK__Category__3214EC078DD82942");
 
             entity.ToTable("CategoryEntity");
 
+            entity.HasIndex(e => e.CategoryName, "UQ__Category__8517B2E0DC12540F").IsUnique();
+
             entity.Property(e => e.CategoryName).HasMaxLength(50);
-
-            entity.HasOne(d => d.ParentCategory).WithMany(p => p.InverseParentCategory)
-                .HasForeignKey(d => d.ParentCategoryId)
-                .HasConstraintName("FK__CategoryE__Paren__65370702");
-
-            entity.HasMany(d => d.ArticleNumbers).WithMany(p => p.Categories)
-                .UsingEntity<Dictionary<string, object>>(
-                    "ProductCategoryEntity",
-                    r => r.HasOne<ProductEntity>().WithMany()
-                        .HasForeignKey("ArticleNumber")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .HasConstraintName("FK__ProductCa__Artic__690797E6"),
-                    l => l.HasOne<CategoryEntity>().WithMany()
-                        .HasForeignKey("CategoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .HasConstraintName("FK__ProductCa__Categ__681373AD"),
-                    j =>
-                    {
-                        j.HasKey("CategoryId", "ArticleNumber").HasName("PK__ProductC__3AC0AB1F31D8A8E2");
-                        j.ToTable("ProductCategoryEntity");
-                        j.IndexerProperty<string>("ArticleNumber").HasMaxLength(200);
-                    });
         });
 
         modelBuilder.Entity<ManufactureEntity>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("PK__Manufact__3214EC07AB169657");
+            entity.HasKey(e => e.Id).HasName("PK__Manufact__3214EC0788661B81");
 
             entity.ToTable("ManufactureEntity");
 
-            entity.HasIndex(e => e.Manufacturers, "UQ__Manufact__D9127BD3912EAA01").IsUnique();
+            entity.HasIndex(e => e.ManufactureName, "UQ__Manufact__00DD03CE64908379").IsUnique();
 
-            entity.Property(e => e.Manufacturers).HasMaxLength(50);
+            entity.Property(e => e.ManufactureName).HasMaxLength(50);
         });
 
         modelBuilder.Entity<ProductEntity>(entity =>
         {
-            entity.HasKey(e => e.ArticleNumber).HasName("PK__ProductE__3C9911430B1D0D74");
+            entity.HasKey(e => e.ArticleNumber).HasName("PK__ProductE__3C99114399799C68");
 
             entity.ToTable("ProductEntity");
+
+            entity.Property(e => e.ArticleNumber).HasMaxLength(200);
+
+            entity.HasOne(d => d.Category).WithMany(p => p.ProductEntities)
+                .HasForeignKey(d => d.CategoryId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ProductEn__Categ__01D345B0");
+
+            entity.HasOne(d => d.Manufacture).WithMany(p => p.ProductEntities)
+                .HasForeignKey(d => d.ManufactureId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ProductEn__Manuf__00DF2177");
+        });
+
+        modelBuilder.Entity<ProductInfoEntity>(entity =>
+        {
+            entity.HasKey(e => e.ArticleNumber).HasName("PK__ProductI__3C9911436C05471D");
+
+            entity.ToTable("ProductInfoEntity");
 
             entity.Property(e => e.ArticleNumber).HasMaxLength(200);
             entity.Property(e => e.Ingress).HasMaxLength(450);
             entity.Property(e => e.ProductTitle).HasMaxLength(100);
 
-            entity.HasOne(d => d.Manufacture).WithMany(p => p.ProductEntities)
-                .HasForeignKey(d => d.ManufactureId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__ProductEn__Manuf__5F7E2DAC");
+            entity.HasOne(d => d.ArticleNumberNavigation).WithOne(p => p.ProductInfoEntity)
+                .HasForeignKey<ProductInfoEntity>(d => d.ArticleNumber)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ProductIn__Artic__04AFB25B");
         });
 
         modelBuilder.Entity<ProductPriceEntity>(entity =>
         {
-            entity.HasKey(e => e.ArticleNumber).HasName("PK__ProductP__3C9911433F410D29");
+            entity.HasKey(e => e.ArticleNumber).HasName("PK__ProductP__3C99114399D0962C");
 
             entity.ToTable("ProductPriceEntity");
 
@@ -99,8 +100,8 @@ public partial class ProductDataContext : DbContext
 
             entity.HasOne(d => d.ArticleNumberNavigation).WithOne(p => p.ProductPriceEntity)
                 .HasForeignKey<ProductPriceEntity>(d => d.ArticleNumber)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK__ProductPr__Artic__625A9A57");
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK__ProductPr__Artic__078C1F06");
         });
 
         OnModelCreatingPartial(modelBuilder);

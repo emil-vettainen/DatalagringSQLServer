@@ -17,9 +17,6 @@
             <Label  Text="Category: *" Margin="0,0,0,5"/>
             <Entry Text="{Binding UpdateDetail.CategoryName}"/>
 
-            <Label  Text="Subcategory: *" Margin="0,0,0,5"/>
-            <Entry Text="{Binding UpdateDetail.SubCategoryName}"/>
-
             <Label  Text="Articlenumber:" Margin="0,5,0,5"/>
             <Entry  Text="{Binding UpdateDetail.ArticleNumber}"/>
 

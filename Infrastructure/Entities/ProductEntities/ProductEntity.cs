@@ -7,19 +7,19 @@ public partial class ProductEntity
 {
     public string ArticleNumber { get; set; } = null!;
 
-    public string ProductTitle { get; set; } = null!;
+    public DateTime Created { get; set; }
 
-    public string Ingress { get; set; } = null!;
-
-    public string Description { get; set; } = null!;
-
-    public string Specification { get; set; } = null!;
+    public DateTime Modified { get; set; }
 
     public int ManufactureId { get; set; }
 
+    public int CategoryId { get; set; }
+
+    public virtual CategoryEntity Category { get; set; } = null!;
+
     public virtual ManufactureEntity Manufacture { get; set; } = null!;
 
-    public virtual ProductPriceEntity? ProductPriceEntity { get; set; }
+    public virtual ProductInfoEntity ProductInfoEntity { get; set; } = null!;
 
-    public virtual ICollection<CategoryEntity> Categories { get; set; } = new List<CategoryEntity>();
+    public virtual ProductPriceEntity ProductPriceEntity { get; set; } = null!;
 }

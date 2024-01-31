@@ -3,6 +3,8 @@ using Business.Services.ProductServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Presentation.MAUI.Mvvm.Models.ProductModels;
+using Shared.Enums;
+using Shared.Helper;
 
 
 namespace Presentation.MAUI.Mvvm.ViewModels;
@@ -28,21 +30,18 @@ public partial class AddProductViewModel : ObservableObject
     [RelayCommand]
     async Task AddProduct()
     {
-        if (
-            !string.IsNullOrWhiteSpace(CreateProductModel.SubCategoryName) &&
+        if (!string.IsNullOrWhiteSpace(CreateProductModel.CategoryName) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.ArticleNumber) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.ProductTitle) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Ingress) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Description) &&
             !string.IsNullOrWhiteSpace(CreateProductModel.Specification) &&
-            !string.IsNullOrWhiteSpace(CreateProductModel.Manufacture))
-           
-
+            !string.IsNullOrWhiteSpace(CreateProductModel.Manufacture) &&
+            CreateProductModel.Price > 0)
         {
-            var result = await _productService.CreateProdukt(new CreateProductDto
+            var result = await _productService.CreateProduktAsync(new CreateProductDto
             {
                 CategoryName = CreateProductModel.CategoryName,
-                SubCategoryName = CreateProductModel.SubCategoryName,
                 ArticleNumber = CreateProductModel.ArticleNumber,
                 ProductTitle = CreateProductModel.ProductTitle,
                 Ingress = CreateProductModel.Ingress,
@@ -50,11 +49,21 @@ public partial class AddProductViewModel : ObservableObject
                 Specification = CreateProductModel.Specification,
                 Manufacture = CreateProductModel.Manufacture,
                 Price = CreateProductModel.Price,
-
             });
-            if (result)
+
+            switch (result.Status)
             {
-                await Shell.Current.GoToAsync("..");
+                case ResultStatus.Successed:
+                    await Shell.Current.GoToAsync("..");
+                    break;
+
+                case ResultStatus.AlreadyExist:
+                    await Shell.Current.DisplayAlert("Something went wrong!", "Product already exists", "Ok");
+                    break;
+
+                default:
+                    await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
+                    break;
             }
         }
         else
@@ -62,7 +71,6 @@ public partial class AddProductViewModel : ObservableObject
             await Shell.Current.DisplayAlert
              ("Something went wrong!",
              "Category is required\n" +
-             "Subcategory is required\n" +
              "Articlenumber is required\n" +
              "Product title is required\n" +
              "Ingress is required\n" +

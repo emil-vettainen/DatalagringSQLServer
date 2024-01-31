@@ -1,13 +1,19 @@
-﻿namespace Presentation.MAUI.Mvvm.Models.ProductModels;
+﻿using System;
+using System.Collections.Generic;
 
-public class CreateProductModel
+namespace Infrastructure.Entities.ProductEntities;
+
+public partial class ProductInfoEntity
 {
-    public string CategoryName { get; set; } = null!;
     public string ArticleNumber { get; set; } = null!;
+
     public string ProductTitle { get; set; } = null!;
+
     public string Ingress { get; set; } = null!;
+
     public string Description { get; set; } = null!;
+
     public string Specification { get; set; } = null!;
-    public string Manufacture { get; set; } = null!;
-    public decimal Price { get; set; }
+
+    public virtual ProductEntity ArticleNumberNavigation { get; set; } = null!;
 }

@@ -9,7 +9,6 @@ namespace Business.Dtos.ProductDtos
     public class ProductDto
     {
         public string CategoryName { get; set; } = null!;
-        public string SubCategoryName { get; set; } = null!;
         public string ArticleNumber { get; set; } = null!;
         public string ProductTitle { get; set; } = null!;
         public string Ingess {  get; set; } = null!;
