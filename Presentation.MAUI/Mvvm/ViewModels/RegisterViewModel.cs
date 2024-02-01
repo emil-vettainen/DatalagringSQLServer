@@ -31,7 +31,7 @@ public partial class RegisterViewModel(UserService userService) : ObservableObje
             !string.IsNullOrWhiteSpace(UserRegister.Password))
             
         {
-            var result = await _userService.CreateUser(new UserRegisterDto
+            var result = await _userService.CreateUserAsync(new UserRegisterDto
             {
                 RoleName = UserRegister.RoleName,
                 FirstName = UserRegister.FirstName,

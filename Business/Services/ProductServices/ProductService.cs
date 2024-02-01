@@ -142,21 +142,34 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         var products = await _productRepository.GetAllAsync();
         if (products != null)
         {
-            var productDto = products.Select(x =>
+
+            return products.Select(x => new ProductDto
             {
-                return new ProductDto
-                {
-                    CategoryName = x.Category.CategoryName,
-                    ArticleNumber = x.ArticleNumber,
-                    ProductTitle = x.ProductInfoEntity.ProductTitle,
-                    Ingess = x.ProductInfoEntity.Ingress,
-                    Description = x.ProductInfoEntity.Description,
-                    Specification = x.ProductInfoEntity.Specification,
-                    Manufacture = x.Manufacture.ManufactureName,
-                    Price = x.ProductPriceEntity.Price,
-                };
+                CategoryName = x.Category.CategoryName,
+                ArticleNumber = x.ArticleNumber,
+                ProductTitle = x.ProductInfoEntity.ProductTitle,
+                Ingress = x.ProductInfoEntity.Ingress,
+                Description = x.ProductInfoEntity.Description,
+                Specification = x.ProductInfoEntity.Specification,
+                Manufacture = x.Manufacture.ManufactureName,
+                Price = x.ProductPriceEntity.Price,
             });
-            return productDto;
+
+            //var productDto = products.Select(x =>
+            //{
+            //    return new ProductDto
+            //    {
+            //        CategoryName = x.Category.CategoryName,
+            //        ArticleNumber = x.ArticleNumber,
+            //        ProductTitle = x.ProductInfoEntity.ProductTitle,
+            //        Ingess = x.ProductInfoEntity.Ingress,
+            //        Description = x.ProductInfoEntity.Description,
+            //        Specification = x.ProductInfoEntity.Specification,
+            //        Manufacture = x.Manufacture.ManufactureName,
+            //        Price = x.ProductPriceEntity.Price,
+            //    };
+            //});
+            //return productDto;
         }
         return Enumerable.Empty<ProductDto>();
     }
@@ -171,7 +184,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                 CategoryName = product.Category.CategoryName,
                 ArticleNumber = product.ArticleNumber,
                 ProductTitle = product.ProductInfoEntity.ProductTitle,
-                Ingess = product.ProductInfoEntity.Ingress,
+                Ingress = product.ProductInfoEntity.Ingress,
                 Description = product.ProductInfoEntity.Description,
                 Specification = product.ProductInfoEntity.Specification,
                 Manufacture = product.Manufacture.ManufactureName,
@@ -194,7 +207,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                 _result.Status = ResultStatus.Failed;
             }
             await UpdateProductEntityAsync(productDto.ArticleNumber, manufactureId, categoryId);
-            await UpdateProductInfoEntityAsync(productDto.ArticleNumber, productDto.ProductTitle, productDto.Ingess, productDto.Description, productDto.Specification);
+            await UpdateProductInfoEntityAsync(productDto.ArticleNumber, productDto.ProductTitle, productDto.Ingress, productDto.Description, productDto.Specification);
             await UpdateProductPriceEntityAsync(productDto.ArticleNumber, productDto.Price);
 
             UpdateProductList?.Invoke(this, EventArgs.Empty);

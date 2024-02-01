@@ -40,7 +40,7 @@ public partial class ProductDetailViewModel : ObservableObject
                     CategoryName = productDetail.CategoryName,
                     ArticleNumber = productDetail.ArticleNumber,
                     ProductTitle = productDetail.ProductTitle,
-                    Ingress = productDetail.Ingess,
+                    Ingress = productDetail.Ingress,
                     Description = productDetail.Description,
                     Specification = productDetail.Specification,
                     Manufacture = productDetail.Manufacture,

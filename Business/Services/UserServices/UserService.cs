@@ -27,9 +27,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
 
 
- 
-
-
     public async Task<IServiceResult> LoginAsync(UserLoginDto userLoginDto)
     {
         try
@@ -57,40 +54,34 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         return _result;
     }
 
-
-
-    public async Task<IServiceResult> CreateUser(UserRegisterDto userRegisterDto)
+    public async Task<IServiceResult> CreateUserAsync(UserRegisterDto userRegisterDto)
     {
         try
         {
-            if (await _authenticationRepository.ExistsAsync(x => x.Email == userRegisterDto.Email))
+            if (!await _authenticationRepository.ExistsAsync(x => x.Email == userRegisterDto.Email))
             {
-                _result.Status = ResultStatus.AlreadyExist;
+                var roleId = await GetOrCreateRoleAsync(userRegisterDto.RoleName);
+
+                var addressId = await GetOrCreateAddressAsync(userRegisterDto.StreetName, userRegisterDto.PostalCode, userRegisterDto.City);
+
+                if (roleId == 0 || addressId == 0)
+                {
+                    _result.Status = ResultStatus.Failed;
+                }
+
+                var userEntity = await CreateUserEntityAsync(roleId, addressId);
+                await CreateProfileEntityAsync(userRegisterDto, userEntity.Id);
+                await CreateAuthEntityAsync(userRegisterDto, userEntity.Id);
+
+                _result.Status = ResultStatus.Successed;
             }
-
-            var roleId = await GetOrCreateRoleAsync(userRegisterDto.RoleName);
-
-            var addressId = await GetOrCreateAddressAsync(userRegisterDto.StreetName, userRegisterDto.PostalCode, userRegisterDto.City);
-            
-            if(roleId == 0 || addressId == 0)
-            {
-                _result.Status = ResultStatus.Failed;
-            }
-
-            var userEntity = await CreateUserEntityAsync(roleId, addressId);
-            await CreateProfileEntityAsync(userRegisterDto, userEntity.Id );
-            await CreateAuthEntityAsync(userRegisterDto, userEntity.Id);
-
-            _result.Status = ResultStatus.Successed;
+            _result.Status = ResultStatus.AlreadyExist;
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - CreateUser"); _result.Status = ResultStatus.Failed; }
         return _result;
     }
 
-
-
-
-    private async Task<int> GetOrCreateRoleAsync(string roleName)
+    public async Task<int> GetOrCreateRoleAsync(string roleName)
     {
         try
         {
@@ -111,7 +102,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         return 0;
     }
 
-    private async Task<int> GetOrCreateAddressAsync(string streetName, string postalCode, string city)
+    public async Task<int> GetOrCreateAddressAsync(string streetName, string postalCode, string city)
     {
         try
         {
@@ -132,7 +123,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         return 0;
     }
 
-    private async Task<UserEntity> CreateUserEntityAsync(int roleId, int addressId)
+    public async Task<UserEntity> CreateUserEntityAsync(int roleId, int addressId)
     {
         try
         {
@@ -149,7 +140,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         return null!;
     }
 
-    private async Task CreateProfileEntityAsync(UserRegisterDto userRegisterDto, Guid userId)
+    public async Task<bool> CreateProfileEntityAsync(UserRegisterDto userRegisterDto, Guid userId)
     {
         try
         {
@@ -159,18 +150,18 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 FirstName = userRegisterDto.FirstName,
                 LastName = userRegisterDto.LastName,
             };
-            await _profileRepository.CreateAsync(profileEntity);
+            var result = await _profileRepository.CreateAsync(profileEntity);
+            return result != null;
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - CreateProfileEntityAsync"); }
+        return false;
     }
 
-    private async Task CreateAuthEntityAsync(UserRegisterDto userRegisterDto, Guid userId)
+    public async Task<bool> CreateAuthEntityAsync(UserRegisterDto userRegisterDto, Guid userId)
     {
         try
         {
             GenerateSecurePassword(userRegisterDto.Password, out string passwordHash, out string passwordKey);
-
-
             var authEntity = new AuthenticationEntity
             {
                 UserId = userId,
@@ -178,9 +169,11 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 PasswordHash = passwordHash,
                 PasswordKey = passwordKey,
             };
-            await _authenticationRepository.CreateAsync(authEntity);
+            var result = await _authenticationRepository.CreateAsync(authEntity);
+            return result != null;
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - CreateAuthEntityAsync"); }
+        return false;
     }
 
 

@@ -11,7 +11,7 @@ namespace Business.Dtos.ProductDtos
         public string CategoryName { get; set; } = null!;
         public string ArticleNumber { get; set; } = null!;
         public string ProductTitle { get; set; } = null!;
-        public string Ingess {  get; set; } = null!;
+        public string Ingress {  get; set; } = null!;
         public string Description { get; set; } = null!;
         public string Specification { get; set; } = null!;
         public string Manufacture { get; set; } = null!;
