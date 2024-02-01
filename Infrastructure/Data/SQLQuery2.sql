@@ -22,11 +22,9 @@ CREATE TABLE ProductEntity
 	ArticleNumber nvarchar(200) NOT NULL PRIMARY KEY,
 	Created Datetime2 NOT NULL,
 	Modified Datetime2 NOT NULL,
-
 	ManufactureId int NOT NULL,
 	FOREIGN KEY (ManufactureId) REFERENCES ManufactureEntity(Id),
 	CategoryId int NOT NULL,
-
 	FOREIGN KEY(CategoryId) REFERENCES CategoryEntity(Id)
 )
 

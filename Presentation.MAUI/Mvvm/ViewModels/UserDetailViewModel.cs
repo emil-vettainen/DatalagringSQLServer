@@ -45,7 +45,7 @@ public partial class UserDetailViewModel : ObservableObject
             UserDetailsModel.PostalCode = user.PostalCode;
             UserDetailsModel.City = user.City;
             UserDetailsModel.Email = user.Email;
-            UserDetailsModel.Password = user.Password;
+            
             
         }
     }
@@ -77,7 +77,7 @@ public partial class UserDetailViewModel : ObservableObject
                     PostalCode = UserDetailsModel.PostalCode,
                     City = UserDetailsModel.City,
                     Email = UserDetailsModel.Email,
-                    Password = string.IsNullOrWhiteSpace(NewPassword) ? UserDetailsModel.Password : NewPassword
+                    Password = string.IsNullOrWhiteSpace(NewPassword) ? null! : NewPassword
                     
                 });
 

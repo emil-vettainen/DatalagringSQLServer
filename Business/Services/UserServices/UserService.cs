@@ -7,6 +7,8 @@ using Shared.Helper;
 using Shared.Interfaces;
 using Shared.Responses;
 using Shared.Utilis;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace Business.Services.UserServices;
 
@@ -22,21 +24,10 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
     private readonly IErrorLogger _errorLogger = errorLogger;
 
     private readonly IServiceResult _result = new ServiceResult();
-  
-
-
-    /*
-
-    public async Task<bool> DeleteUserByIdAsync(string email)
-    {
 
 
 
-    }
-
-
-
-    */
+ 
 
 
     public async Task<IServiceResult> LoginAsync(UserLoginDto userLoginDto)
@@ -44,11 +35,18 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         try
         {
             var user = await _authenticationRepository.GetOneAsync(x => x.Email == userLoginDto.Email);
-            if (user != null && user.Password == userLoginDto.Password)
+            if (user != null)
             {
-                _result.Status = ResultStatus.Successed;
-                AppState.UserId = user.UserId;
-                AppState.IsAuthenticated = true;
+                if(ValidatePassword(userLoginDto.Password, user.PasswordHash, user.PasswordKey))
+                {
+                    _result.Status = ResultStatus.Successed;
+                    AppState.UserId = user.UserId;
+                    AppState.IsAuthenticated = true;
+                }
+                else
+                {
+                    _result.Status = ResultStatus.WrongPassword;
+                }
             }
             else
             {
@@ -170,11 +168,15 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
     {
         try
         {
+            GenerateSecurePassword(userRegisterDto.Password, out string passwordHash, out string passwordKey);
+
+
             var authEntity = new AuthenticationEntity
             {
                 UserId = userId,
                 Email = userRegisterDto.Email,
-                Password = userRegisterDto.Password,
+                PasswordHash = passwordHash,
+                PasswordKey = passwordKey,
             };
             await _authenticationRepository.CreateAsync(authEntity);
         }
@@ -205,15 +207,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 var updatedAuth = await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
                 _result.Status = updatedAuth ? ResultStatus.Updated : ResultStatus.AlreadyExist;
             }
-            
-            
-              
 
-                
-            
-
-            
-            
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); _result.Status = ResultStatus.Failed; }
         return _result;
@@ -259,17 +253,27 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         }
     }
 
-    private async Task<bool> UpdateAuthEntityAsync(Guid userId, string email, string password)
+    private async Task<bool> UpdateAuthEntityAsync(Guid userId, string email, string? password)
     {
         if(!await _authenticationRepository.ExistsAsync(x => x.Email == email))
         {
             var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
             if (auth != null)
             {
-                auth.Email = email;
-                auth.Password = password;
 
-               var result = await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
+                auth.Email = email;
+
+                if(password != null)
+                {
+                    GenerateSecurePassword(password, out string passwordHash, out string passwordKey);
+                    auth.PasswordHash = passwordHash;
+                    auth.PasswordKey = passwordKey;
+
+                }
+
+
+
+                var result = await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
                 if (result != null)
                 {
                     return true;
@@ -298,7 +302,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                     City = user.Address.City,
                     RoleName = user.Role.RoleName,
                     Email = user.Authentication.Email,
-                    Password = user.Authentication.Password,
+                   
                 };
                 return userDetails;
             }
@@ -320,4 +324,29 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         { _result.Status = ResultStatus.Failed; _errorLogger.ErrorLog(ex.Message, "UserRepo - DeleteUserByIdAsync"); }
         return _result;
     }
+
+
+
+    public void GenerateSecurePassword(string password, out string passwordHash, out string passwordKey)
+    {
+        using var hmac = new HMACSHA256();
+        var key = hmac.Key;
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        passwordHash = Convert.ToBase64String(hash);
+        passwordKey = Convert.ToBase64String(key);
+    }
+
+    public bool ValidatePassword(string password, string passwordHash, string passwordKey )
+    {
+        var stringHash = Convert.FromBase64String(passwordHash);
+        var stringKey = Convert.FromBase64String(passwordKey);
+
+        using var hmac = new HMACSHA256(stringKey);
+        var hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+
+        return hash.SequenceEqual(stringHash);
+    }
+
+
+
 }

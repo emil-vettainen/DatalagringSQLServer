@@ -8,4 +8,5 @@ public enum ResultStatus
     NotFound = 3,
     Updated = 4,
     Deleted = 5,
+    WrongPassword = 6,
 }

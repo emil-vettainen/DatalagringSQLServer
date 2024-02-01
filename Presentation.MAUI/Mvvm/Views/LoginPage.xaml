@@ -21,7 +21,7 @@
             <Entry Placeholder="Email" Text="{Binding UserLoginModel.Email}" />
             <Label Text="Password:" />
             <Entry IsPassword="True" Placeholder="Password" Text="{Binding UserLoginModel.Password}" />
-            <Button Text="Login" Command="{Binding GoToHomePageCommand}" />
+            <Button Text="Login" Command="{Binding GoToHomePageCommand}" Margin="0,5,0,0"/>
             <Button Text="Register" Command="{Binding GoToRegisterPageCommand}" />
         </StackLayout>
     </ContentPage.Content>

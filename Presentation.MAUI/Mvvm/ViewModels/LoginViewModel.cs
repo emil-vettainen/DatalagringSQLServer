@@ -62,7 +62,7 @@ namespace Presentation.MAUI.Mvvm.ViewModels
             }
             else
             {
-                await Shell.Current.DisplayAlert("Something went wrong","Email is required\nPassword is required", "Ok");
+                await Shell.Current.DisplayAlert("Something went wrong", "Email is required\nPassword is required", "Ok");
             }
         }
 
