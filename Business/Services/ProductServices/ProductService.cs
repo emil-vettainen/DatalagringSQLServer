@@ -25,47 +25,84 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
     {
         try
         {
-            if (await _productRepository.ExistsAsync(x => x.ArticleNumber == dto.ArticleNumber))
+            if(await _productRepository.ExistsAsync(x => x.ArticleNumber == dto.ArticleNumber))
             {
-                _result.Status = ResultStatus.AlreadyExist;
+                return new ServiceResult { Status = ResultStatus.AlreadyExist };
             }
 
             var manufactureId = await GetOrCreateManufactureAsync(dto.Manufacture);
-            var categoryId = await GetOrCreateCategoryAsync(dto.CategoryName);
-
-            if (manufactureId == 0 || categoryId == 0)
+            if(manufactureId == 0)
             {
-                _result.Status = ResultStatus.Failed;
+                return new ServiceResult { Status = ResultStatus.Failed };
             }
 
-            await CreateProductEntityAsync(dto.ArticleNumber, manufactureId, categoryId);
-            await CreateProductInfoEntityAsync(dto.ArticleNumber, dto.ProductTitle, dto.Ingress, dto.Description, dto.Specification);
-            await CreateProductPriceEntityAsync(dto.ArticleNumber, dto.Price);
+            var categoryId = await GetOrCreateCategoryAsync(dto.CategoryName);
+            if(categoryId == 0)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
 
-            UpdateProductList?.Invoke(this, EventArgs.Empty);
-            _result.Status = ResultStatus.Successed;
+            var productEntity = await CreateProductEntityAsync(dto.ArticleNumber, manufactureId, categoryId);
+            if (!productEntity)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+
+            var productInfo = await CreateProductInfoEntityAsync(dto.ArticleNumber, dto.ProductTitle, dto.Ingress, dto.Description, dto.Specification);
+            if (!productInfo)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+
+            var productPrice = await CreateProductPriceEntityAsync(dto.ArticleNumber, dto.Price);
+            return new ServiceResult { Status = productPrice ? ResultStatus.Successed : ResultStatus.Failed };
+
+
+
+            //if (await _productRepository.ExistsAsync(x => x.ArticleNumber == dto.ArticleNumber))
+            //{
+            //    _result.Status = ResultStatus.AlreadyExist;
+            //}
+
+            //var manufactureId = await GetOrCreateManufactureAsync(dto.Manufacture);
+            //var categoryId = await GetOrCreateCategoryAsync(dto.CategoryName);
+
+            //if (manufactureId == 0 || categoryId == 0)
+            //{
+            //    _result.Status = ResultStatus.Failed;
+            //}
+
+            //await CreateProductEntityAsync(dto.ArticleNumber, manufactureId, categoryId);
+            //await CreateProductInfoEntityAsync(dto.ArticleNumber, dto.ProductTitle, dto.Ingress, dto.Description, dto.Specification);
+            //await CreateProductPriceEntityAsync(dto.ArticleNumber, dto.Price);
+
+            //UpdateProductList?.Invoke(this, EventArgs.Empty);
+            //_result.Status = ResultStatus.Successed;
 
         }
-        catch (Exception ex){ _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProduktAsync");_result.Status = ResultStatus.Failed;}
-        return _result;
+        catch (Exception ex){ _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProduktAsync"); return new ServiceResult { Status = ResultStatus.Failed };}
     }
 
     private async Task<int> GetOrCreateManufactureAsync(string manufacture)
     {
         try
         {
-            var manufactureExists = await _manufacturerRepository.ExistsAsync(x => x.ManufactureName == manufacture);
-            if (manufactureExists)
+            if(manufacture != null)
             {
-                var existingManufacture = await _manufacturerRepository.GetOneAsync(x => x.ManufactureName == manufacture);
-                return existingManufacture.Id;
+                var manufactureExists = await _manufacturerRepository.ExistsAsync(x => x.ManufactureName == manufacture);
+                if (manufactureExists)
+                {
+                    var existingManufacture = await _manufacturerRepository.GetOneAsync(x => x.ManufactureName == manufacture);
+                    return existingManufacture.Id;
+                }
+                else
+                {
+                    var manufactureEntity = new ManufactureEntity { ManufactureName = manufacture };
+                    var createdManufacture = await _manufacturerRepository.CreateAsync(manufactureEntity);
+                    return createdManufacture.Id;
+                }
             }
-            else
-            {
-                var manufactureEntity = new ManufactureEntity { ManufactureName = manufacture };
-                var createdManufacture = await _manufacturerRepository.CreateAsync(manufactureEntity);
-                return createdManufacture.Id;
-            }
+
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - GetOrCreateManufactureAsync"); }
         return 0;
@@ -75,66 +112,84 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
     {
         try
         {
-            var categoryNameExists = await _categoryRepository.ExistsAsync(x => x.CategoryName == categoryName);
-            if (categoryNameExists)
+            if(categoryName != null)
             {
-                var existingCategoryName = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
-                return existingCategoryName.Id;
-            }
-            else
-            {
-                var categoryEntity = new CategoryEntity { CategoryName = categoryName };
-                var createdCategoryName = await _categoryRepository.CreateAsync(categoryEntity);
-                return createdCategoryName.Id;
+                var categoryNameExists = await _categoryRepository.ExistsAsync(x => x.CategoryName == categoryName);
+                if (categoryNameExists)
+                {
+                    var existingCategoryName = await _categoryRepository.GetOneAsync(x => x.CategoryName == categoryName);
+                    return existingCategoryName.Id;
+                }
+                else
+                {
+                    var categoryEntity = new CategoryEntity { CategoryName = categoryName };
+                    var createdCategoryName = await _categoryRepository.CreateAsync(categoryEntity);
+                    return createdCategoryName.Id;
+                }
             }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - GetOrCreateCategoryAsync"); }
         return 0;
     }
 
-    private async Task CreateProductEntityAsync(string articleNumber, int manufactureId, int categoryId)
+    private async Task<bool> CreateProductEntityAsync(string articleNumber, int manufactureId, int categoryId)
     {
         try
         {
-            await _productRepository.CreateAsync(new ProductEntity
+            if(articleNumber != null &&  manufactureId != 0 && categoryId != 0) 
             {
-                ArticleNumber = articleNumber,
-                Created = DateTime.Now,
-                ManufactureId = manufactureId,
-                CategoryId = categoryId,
-            });
+                var result = await _productRepository.CreateAsync(new ProductEntity
+                {
+                    ArticleNumber = articleNumber,
+                    Created = DateTime.Now,
+                    ManufactureId = manufactureId,
+                    CategoryId = categoryId,
+                });
+                return result != null;
+            }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProductEntityAsync"); }
+        return false;
     }
     
-    private async Task CreateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
+    private async Task<bool> CreateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
     {
         try
         {
-            await _productInfoRepository.CreateAsync(new ProductInfoEntity
+            if(articleNumber != null && productTitle != null && ingress != null && description != null && specification != null)
             {
-                ArticleNumber = articleNumber,
-                ProductTitle = productTitle,
-                Ingress = ingress,
-                Description = description,
-                Specification = specification,
-            });
-           
+                var result = await _productInfoRepository.CreateAsync(new ProductInfoEntity
+                {
+                    ArticleNumber = articleNumber,
+                    ProductTitle = productTitle,
+                    Ingress = ingress,
+                    Description = description,
+                    Specification = specification,
+                });
+                return result != null;
+            }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProductInfoAsync"); }
+        return false;
     }
 
-    private async Task CreateProductPriceEntityAsync(string articleNumber, decimal price)
+    private async Task<bool> CreateProductPriceEntityAsync(string articleNumber, decimal price)
     {
         try
         {
-            await _productPriceRepository.CreateAsync(new ProductPriceEntity
+            if(articleNumber != null && price != 0)
             {
-                ArticleNumber = articleNumber,
-                Price = price,
-            });
+               var result = await _productPriceRepository.CreateAsync(new ProductPriceEntity
+                {
+                    ArticleNumber = articleNumber,
+                    Price = price,
+                });
+                return result != null;
+            }
+           
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProductPriceAsync"); }
+        return false;
     }
 
     public async Task<IEnumerable<ProductDto>> GetAllProductsAsync()
