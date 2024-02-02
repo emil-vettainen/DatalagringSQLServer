@@ -332,10 +332,46 @@ public class UserService_Tests
         Assert.False(result);
     }
 
+    [Fact]
+    public async Task UpdateUserAsync_ShouldUpdateUserEmail_ReturnStatusUpdated()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
 
+        // Act
+
+        var result = await _userService.UpdateUserAsync(new UserUpdateDto
+        {
+            Id = existingUser.Id,
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "annan@domain.com",
+            Password = "Bytmig123!"
+
+       });
+
+        // Assert
+        Assert.Equal(ResultStatus.Updated, result.Status);
+        Assert.Equal("annan@domain.com", existingUser.Authentication.Email);
+    }
 
     [Fact]
-    public async Task UpdateUserAsync_ShouldUpdateUser_ReturnUpdatedEntity()
+    public async Task UpdateUserAsync_ShouldUpdateAllUserDetails_ReturnStatusUpdated()
     {
         // Arrange
         var user = await _userService.CreateUserAsync(new UserRegisterDto
@@ -350,32 +386,312 @@ public class UserService_Tests
             Password = "Bytmig123!",
         });
 
-        var existingUser = await _userService.GetUserDetailsAsync(x => x.Authentication.Email == "emil@domain.com");
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
 
         // Act
-
-       var result = await _userService.UpdateUserAsync(new UserUpdateDto
+        var result = await _userService.UpdateUserAsync(new UserUpdateDto
         {
             Id = existingUser.Id,
-            RoleName = "Admin",
+            RoleName = "User",
             FirstName = "Annan",
+            LastName = "Efternamn",
+            StreetName = "Gbg",
+            PostalCode = "12346",
+            City = "Gbg",
+            Email = "annan@domain.com",
+           
+
+        });
+        var updatedUser = await _userService.GetUserDetailsAsync(existingUser.Id);
+
+        // Assert
+        Assert.Equal(ResultStatus.Updated, result.Status);
+        Assert.Equal("annan@domain.com", existingUser.Authentication.Email);
+        Assert.Equal("User", existingUser.Role.RoleName);
+        Assert.Equal("Efternamn", existingUser.Profile.LastName);
+        Assert.Equal("Gbg", existingUser.Address.StreetName);
+    }
+
+    [Fact]
+    public async Task UpdateUserAsync_ShouldNotUpdateUserEmailIfEmailExists_ReturnStatusAlreadyExists()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        var user2 = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
             LastName = "Vettainen",
             StreetName = "Skara",
             PostalCode = "12345",
             City = "Skara",
             Email = "annan@domain.com",
-            Password = "password"
+            Password = "Bytmig123!",
+        });
+
+        // Act
+        var result = await _userService.UpdateUserAsync(new UserUpdateDto
+        {
+            Id = existingUser.Id,
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "annan@domain.com",
+            Password = "Bytmig123!"
 
         });
 
         // Assert
-
-        Assert.Equal(ResultStatus.Updated, result.Status);  
-
-
+        Assert.Equal(ResultStatus.AlreadyExist, result.Status);
     }
 
+    [Fact]
+    public async Task UpdateUserAsync_ShouldNotUpdateUserIfRequiredIsNull_ReturnStatusFailed()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
 
+        // Act
+        var result = await _userService.UpdateUserAsync(new UserUpdateDto
+        {
+            Id = existingUser.Id,
+            RoleName = "Admin",
+            FirstName = null!,
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "annan@domain.com",
+            Password = "Bytmig123!"
+        });
+
+        // Assert
+        Assert.Equal(ResultStatus.Failed, result.Status);
+    }
+
+    [Fact]
+    public async Task UpdateUserEntity_ShouldUpdateUserEntity_ReturnTrue()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        //Act
+        var result = await _userService.UpdateUserEntityAsync(existingUser.Id, 2, 2);
+
+        //Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task UpdateUserEntity_ShouldNotUpdateUserEntityIfNoRoleId_ReturnFalse()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        //Act
+        var result = await _userService.UpdateUserEntityAsync(existingUser.Id, 0, 2);
+
+        //Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task UpdateProfileEntity_ShouldUpdateProfile_ReturnTrue()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        // Act
+
+        var result = await _userService.UpdateProfileEntityAsync(existingUser.Id, "Annan", "Efternamn");
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public async Task UpdateAuthEntity_ShouldUpdateAuth_ReturnTrue()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        // Act
+        var result = await _userService.UpdateAuthEntityAsync(existingUser.Id, "Annan@domain.com", "AnnatPassword!");
+        var isValid = _userService.ValidatePassword("AnnatPassword!", existingUser.Authentication.PasswordHash, existingUser.Authentication.PasswordKey);
+
+        // Assert
+        Assert.True(result);
+        Assert.Equal("Annan@domain.com", existingUser.Authentication.Email);
+        Assert.True(isValid);
+    }
+
+    [Fact]
+    public async Task UpdateAuthEntity_ShouldNotUpdateAuthIfEmailExists_ReturnFalse()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        var user2 = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "Annan@domain.com",
+            Password = "Bytmig123!",
+        });
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        // Act
+        var result = await _userService.UpdateAuthEntityAsync(existingUser.Id, "Annan@domain.com", "AnnatPassword!");
+        
+        // Assert
+        Assert.False(result);
+    }
+
+    [Fact]
+    public async Task DeleteUserById_ShouldDeleteUserFromDatabase_ReturnDeleted()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+
+        var existingUser = await _userService.GetUserAsync(x => x.Authentication.Email == "emil@domain.com");
+        // Act
+
+        var result = await _userService.DeleteUserByIdAsync(existingUser.Id);
+
+        // Assert
+        Assert.Equal(ResultStatus.Deleted, result.Status);
+    }
+
+    [Fact]
+    public async Task DeleteUserById_ShouldNotDeleteUserIfNotFound_ReturnNotFound()
+    {
+        // Arrange
+        await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
+        
+        // Act
+        var result = await _userService.DeleteUserByIdAsync(Guid.NewGuid());
+
+        // Assert
+        Assert.Equal(ResultStatus.NotFound, result.Status);
+    }
+
+    [Fact]
+    public void GenerateSecurePassword_ShouldCreateHashPassword_ValidateHash_ReturnTrue()
+    {
+        //Arrange
+        var password = "Bytmig123!";
+        _userService.GenerateSecurePassword(password, out string passwordHash, out string passwordKey);
+
+        // Act
+        var isValid = _userService.ValidatePassword("Bytmig123!", passwordHash, passwordKey);
+
+        // Assert
+        Assert.True(isValid);
+    }
 
 
 

@@ -79,6 +79,19 @@ public partial class UserDetailViewModel(UserService userService) : ObservableOb
                         await Shell.Current.DisplayAlert("Something went wrong!", "Email already exists", "Ok");
                         break;
 
+                    case ResultStatus.Failed:
+                        await Shell.Current.DisplayAlert
+                           ("Something went wrong!",
+                           "Rolenname is required\n" +
+                           "Firstname is required\n" +
+                           "Lastname is required\n" +
+                           "Streetname is required\n" +
+                           "Postalcode is required\n" +
+                           "City is required\n" +
+                           "Email is required\n",
+                           "Ok");
+                        break;
+
                     default:
                         NewPassword = string.Empty;
                         await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
