@@ -8,15 +8,10 @@
              x:DataType="{x:Type viewmodels:HomeViewModel}" >
 
 
-  
-
-
     <VerticalStackLayout>
         <Label 
             Text="{Binding UserDetailsModel.FirstName, StringFormat='Welcome {0}!'}" FontSize="20"
             VerticalOptions="Center" 
             HorizontalOptions="Center" />
-      
-
     </VerticalStackLayout>
 </ContentPage>

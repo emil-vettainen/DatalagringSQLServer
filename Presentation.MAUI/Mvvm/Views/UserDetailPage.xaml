@@ -3,11 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Presentation.MAUI.Mvvm.Views.UserDetailPage"
 
-             
              xmlns:viewmodels="clr-namespace:Presentation.MAUI.Mvvm.ViewModels"
              x:DataType="viewmodels:UserDetailViewModel"
-             
-              
              
              Title="UserDetailPage">
 
@@ -20,10 +17,8 @@
 
                     <Label Grid.Column="0" Grid.Row="0" Text="Role:" VerticalOptions="Center"/>
                     <Picker Grid.Column="1" Grid.Row="0"
-                     SelectedIndex="{Binding UserDetailsModel.SlecectedRoleIndex, Mode=TwoWay}" 
-                     ItemsSource="{Binding Roles}" 
-                     />
-
+                        SelectedIndex="{Binding UserDetailsModel.SlecectedRoleIndex, Mode=TwoWay}" 
+                        ItemsSource="{Binding Roles}"/>
 
                     <Label Grid.Column="0" Grid.Row="1" Text="Firstname:" Margin="0,0,0,0" VerticalOptions="Center"/>
                     <Entry Grid.Column="1" Grid.Row="1" Text="{Binding UserDetailsModel.FirstName}"/>
@@ -43,30 +38,16 @@
                     <Label Grid.Column="0" Grid.Row="6" Text="Email:" Margin="0,0,0,0" VerticalOptions="Center"/>
                     <Entry Grid.Column="1" Grid.Row="6" Text="{Binding UserDetailsModel.Email}"/>
 
-
                     <Label Grid.Column="0" Grid.Row="7" Text="Password:" Margin="0,0,0,0" VerticalOptions="Center"/>
-                    <Entry Grid.Column="1" Grid.Row="7" Text="{Binding NewPassword, Mode=TwoWay}" IsPassword="False" />
+                    <Entry Grid.Column="1" Grid.Row="7" Text="{Binding NewPassword, Mode=TwoWay}" IsPassword="True" />
                     <Label Grid.Column="1" Grid.Row="8" Text="(leave empty if you dont want to change the password)" />
-
-                    <!--<Label Grid.Column="0" Grid.Row="5" Text="Role:" Margin="0,0,0,0" VerticalOptions="Center" FontSize="16" />
-             <Entry Grid.Column="1" Grid.Row="5" Text="{Binding UserDetailsModel.RoleName}" FontSize="16" />-->
-
-
 
                 </Grid>
             </StackLayout>
-
             <VerticalStackLayout Grid.Row="1" Spacing="10">
                 <Button  Margin="0,20,0,0" FontSize="18" Background="#66B66D" Grid.Column="1" Text="Update" Command="{Binding UpdateUserCommand}" />
                 <Button  FontSize="18" Background="#ff3126" Grid.Column="1" Text="Delete" Command="{Binding DeleteUserCommand}"/>
-
-                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" HorizontalOptions="CenterAndExpand" VerticalOptions="CenterAndExpand" />
-
             </VerticalStackLayout>
         </Grid>
-
     </ScrollView>
-
-
-   
 </ContentPage>

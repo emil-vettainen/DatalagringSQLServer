@@ -10,18 +10,10 @@ using Shared.Helper;
 
 namespace Presentation.MAUI.Mvvm.ViewModels;
 
-public partial class UserDetailViewModel : ObservableObject
+public partial class UserDetailViewModel(UserService userService) : ObservableObject
 {
 
-    private readonly UserService _userService;
-
-    public UserDetailViewModel(UserService userService)
-    {
-        _userService = userService;
-    }
-
-    [ObservableProperty]
-    bool _isBusy = false;
+    private readonly UserService _userService = userService;
 
     [ObservableProperty]
     UserDetailsModel userDetailsModel = new();
@@ -29,11 +21,9 @@ public partial class UserDetailViewModel : ObservableObject
     [ObservableProperty]
     List<string> roles = ["Admin", "User", "Manager"];
 
-
     public async Task ShowUserDetails()
     {
         var user = await _userService.GetUserDetailsAsync(AppState.UserId);
-
         if (user != null)
         {
             UserDetailsModel.RoleName = user.RoleName;
@@ -45,14 +35,12 @@ public partial class UserDetailViewModel : ObservableObject
             UserDetailsModel.PostalCode = user.PostalCode;
             UserDetailsModel.City = user.City;
             UserDetailsModel.Email = user.Email;
-            
-            
         }
     }
 
+
     [ObservableProperty]
     string? _newPassword;
-
 
     [RelayCommand]
     async Task UpdateUser()
@@ -63,7 +51,6 @@ public partial class UserDetailViewModel : ObservableObject
             !string.IsNullOrWhiteSpace(UserDetailsModel.PostalCode) &&
             !string.IsNullOrWhiteSpace(UserDetailsModel.City))
         {
-
             var roleName = Roles.ElementAtOrDefault(UserDetailsModel.SlecectedRoleIndex);
             if (roleName != null)
             {
@@ -77,29 +64,23 @@ public partial class UserDetailViewModel : ObservableObject
                     PostalCode = UserDetailsModel.PostalCode,
                     City = UserDetailsModel.City,
                     Email = UserDetailsModel.Email,
-                    Password = string.IsNullOrWhiteSpace(NewPassword) ? null! : NewPassword
-                    
+                    Password = string.IsNullOrWhiteSpace(NewPassword) ? null! : NewPassword 
                 });
 
                 switch (result.Status)
                 {
                     case ResultStatus.Updated:
-                        IsBusy = true;
-                        await Task.Delay(2000);
-                        IsBusy = false;
-                        
-                        await Shell.Current.DisplayAlert("Updated!", "User was updated", "Ok");
                         NewPassword = string.Empty;
+                        await Shell.Current.DisplayAlert("Updated!", "User was updated", "Ok");
                         break;
 
                     case ResultStatus.AlreadyExist:
+                        NewPassword = string.Empty;
                         await Shell.Current.DisplayAlert("Something went wrong!", "Email already exists", "Ok");
                         break;
 
                     default:
-                        IsBusy = true;
-                        await Task.Delay(2000);
-                        IsBusy = false;
+                        NewPassword = string.Empty;
                         await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
                         break;
                 }
@@ -110,24 +91,17 @@ public partial class UserDetailViewModel : ObservableObject
     [RelayCommand]
     async Task DeleteUser()
     {
-        var answer = await Shell.Current.DisplayAlert("Warning!", "Are you sure you want to delete the contact?\nThis action cannot be undone.", "Ok", "Cancel");
+        var answer = await Shell.Current.DisplayAlert("Warning!", "Are you sure you want to delete?\nThis action cannot be undone.", "Ok", "Cancel");
         if(answer)
         {
             var result = await _userService.DeleteUserByIdAsync(AppState.UserId);
-
             switch (result.Status)
             {
                 case ResultStatus.Deleted:
-                    IsBusy = true;
-                    await Task.Delay(2000);
-                    IsBusy = false;
                     await Shell.Current.GoToAsync($"//{nameof(LoginPage)}", animate: false);
                     break;
 
                 default:
-                    IsBusy = true;
-                    await Task.Delay(2000);
-                    IsBusy = false;
                     await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
                     break;
             }

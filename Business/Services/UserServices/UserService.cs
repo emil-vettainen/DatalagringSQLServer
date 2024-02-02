@@ -1,12 +1,10 @@
 ﻿using Business.Dtos;
 using Infrastructure.Entities.UserEntities;
-using Infrastructure.Interfaces;
 using Infrastructure.Repositories.UserRepositories;
 using Shared.Enums;
 using Shared.Helper;
 using Shared.Interfaces;
 using Shared.Responses;
-using Shared.Utilis;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -176,48 +174,30 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         return false;
     }
 
-
-
     public async Task<IServiceResult> UpdateUserAsync(UserUpdateDto userUpdateDto)
     {
         try
         {
             var roleId = await GetOrCreateRoleAsync(userUpdateDto.RoleName);
             var addressId = await GetOrCreateAddressAsync(userUpdateDto.StreetName, userUpdateDto.PostalCode, userUpdateDto.City);
-
             if(roleId == 0 || addressId == 0)
             {
                 _result.Status = ResultStatus.Failed;
             }
-
             var result = await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
-
             if(result)
             {
                 await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
-
-
                 var updatedAuth = await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
                 _result.Status = updatedAuth ? ResultStatus.Updated : ResultStatus.AlreadyExist;
             }
-
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); _result.Status = ResultStatus.Failed; }
         return _result;
     }
 
-
     private async Task<bool> UpdateUserEntityAsync(Guid userId, int roleId, int addressId)
     {
-        //var user = await _userRepository.GetOneAsync(x => x.Id == userId);
-        //if (user != null)
-        //{
-        //    user.RoleId = roleId;
-        //    user.AddressId = addressId;
-        //    user.Modified = DateTime.Now;
-        //    await _userRepository.UpdateAsync(x => x.Id == user.Id, user);
-        //}
-
         try
         {
             var newUserEntity = await _userRepository.UpdateAsync(x => x.Id == userId, new UserEntity
@@ -228,52 +208,50 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 Modified = DateTime.Now,
             });
             return newUserEntity != null;
- 
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserEntityAsync"); }
         return false;
     }
 
-    private async Task UpdateProfileEntityAsync(Guid userId, string firstName, string lastName)
+    private async Task<bool> UpdateProfileEntityAsync(Guid userId, string firstName, string lastName)
     {
-        var profile = await _profileRepository.GetOneAsync(x => x.UserId == userId);
-        if (profile != null)
+        try
         {
-            profile.FirstName = firstName;
-            profile.LastName = lastName;
-
-            await _profileRepository.UpdateAsync(x => x.UserId == userId, profile);
+            var newProfileEntity = await _profileRepository.UpdateAsync(x => x.UserId == userId, new ProfileEntity
+            {
+                FirstName = firstName,
+                LastName = lastName,
+            });
+            return newProfileEntity != null;
         }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateProfileEntityAsync"); }
+        return false;
     }
 
     private async Task<bool> UpdateAuthEntityAsync(Guid userId, string email, string? password)
     {
-        if(!await _authenticationRepository.ExistsAsync(x => x.Email == email))
+        try
         {
-            var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
-            if (auth != null)
+            if (!await _authenticationRepository.ExistsAsync(x => x.Email == email))
             {
-
-                auth.Email = email;
-
-                if(password != null)
+                var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
+                if (auth != null)
                 {
-                    GenerateSecurePassword(password, out string passwordHash, out string passwordKey);
-                    auth.PasswordHash = passwordHash;
-                    auth.PasswordKey = passwordKey;
+                    auth.Email = email;
 
-                }
+                    if (password != null)
+                    {
+                        GenerateSecurePassword(password, out string passwordHash, out string passwordKey);
+                        auth.PasswordHash = passwordHash;
+                        auth.PasswordKey = passwordKey;
+                    }
 
-
-
-                var result = await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
-                if (result != null)
-                {
-                    return true;
+                    var result = await _authenticationRepository.UpdateAsync(x => x.UserId == userId, auth);
+                    return result != null;
                 }
             }
         }
-
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateAuthEntityAsync"); }
         return false;
     }
 
@@ -295,7 +273,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                     City = user.Address.City,
                     RoleName = user.Role.RoleName,
                     Email = user.Authentication.Email,
-                   
                 };
                 return userDetails;
             }
@@ -303,8 +280,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - GetUserDetailsAsync"); }
         return null!;
     }
-
-
 
     public async Task<IServiceResult> DeleteUserByIdAsync(Guid userId)
     {
@@ -339,7 +314,4 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
         return hash.SequenceEqual(stringHash);
     }
-
-
-
 }

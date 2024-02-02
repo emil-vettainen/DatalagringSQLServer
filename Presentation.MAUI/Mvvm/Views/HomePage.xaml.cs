@@ -15,7 +15,7 @@ public partial class HomePage : ContentPage
         base.OnAppearing();
 		if(BindingContext is HomeViewModel viewModel)
 		{
-			await viewModel.ShowUserFirstName();
+			await viewModel.WelcomeUser();
 		}
     }
 }

@@ -23,8 +23,6 @@ namespace Presentation.MAUI
         {
             AppState.IsAuthenticated = false;
             AppState.UserId = Guid.Empty;
-
-
             await Shell.Current.GoToAsync($"//{nameof(LoginPage)}");
         }
     }
