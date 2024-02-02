@@ -334,7 +334,46 @@ public class UserService_Tests
 
 
 
+    [Fact]
+    public async Task UpdateUserAsync_ShouldUpdateUser_ReturnUpdatedEntity()
+    {
+        // Arrange
+        var user = await _userService.CreateUserAsync(new UserRegisterDto
+        {
+            RoleName = "Admin",
+            FirstName = "Emil",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "emil@domain.com",
+            Password = "Bytmig123!",
+        });
 
+        var existingUser = await _userService.GetUserDetailsAsync(x => x.Authentication.Email == "emil@domain.com");
+
+        // Act
+
+       var result = await _userService.UpdateUserAsync(new UserUpdateDto
+        {
+            Id = existingUser.Id,
+            RoleName = "Admin",
+            FirstName = "Annan",
+            LastName = "Vettainen",
+            StreetName = "Skara",
+            PostalCode = "12345",
+            City = "Skara",
+            Email = "annan@domain.com",
+            Password = "password"
+
+        });
+
+        // Assert
+
+        Assert.Equal(ResultStatus.Updated, result.Status);  
+
+
+    }
 
 
 

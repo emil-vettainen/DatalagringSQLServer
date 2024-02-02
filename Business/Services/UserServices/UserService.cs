@@ -5,6 +5,7 @@ using Shared.Enums;
 using Shared.Helper;
 using Shared.Interfaces;
 using Shared.Responses;
+using System.Linq.Expressions;
 using System.Security.Cryptography;
 using System.Text;
 
@@ -72,11 +73,32 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 await CreateAuthEntityAsync(userRegisterDto, userEntity.Id);
 
                 _result.Status = ResultStatus.Successed;
+                
+                
             }
             _result.Status = ResultStatus.AlreadyExist;
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - CreateUser"); _result.Status = ResultStatus.Failed; }
         return _result;
+       
+    }
+
+    public async Task<UserEntity> GetUserDetailsAsync(Expression<Func<UserEntity, bool>> predicate)
+    {
+        try
+        {
+           var user = await _userRepository.GetOneAsync(predicate);
+           if(user != null)
+            {
+                return user;
+            }
+        }
+        catch (Exception)
+        {
+
+            throw;
+        }
+        return null!;
     }
 
     public async Task<int> GetOrCreateRoleAsync(string roleName)
@@ -180,17 +202,39 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         {
             var roleId = await GetOrCreateRoleAsync(userUpdateDto.RoleName);
             var addressId = await GetOrCreateAddressAsync(userUpdateDto.StreetName, userUpdateDto.PostalCode, userUpdateDto.City);
-            if(roleId == 0 || addressId == 0)
+            if(roleId != 0 || addressId != 0)
+            {
+                var updatedUserEntity = await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
+                if(updatedUserEntity)
+                {
+                    var updatedProfileEntity = await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
+                    if (updatedProfileEntity)
+                    {
+                        var updatedAuth = await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
+                        _result.Status = updatedAuth ? ResultStatus.Updated : ResultStatus.AlreadyExist;
+                    }
+                    else
+                    {
+                        _result.Status = ResultStatus.Failed;
+                    }
+                }
+
+
+
+
+
+
+
+
+                _result.Status = ResultStatus.Failed;
+                
+            }
+            else
             {
                 _result.Status = ResultStatus.Failed;
             }
-            var result = await UpdateUserEntityAsync(userUpdateDto.Id, roleId, addressId);
-            if(result)
-            {
-                await UpdateProfileEntityAsync(userUpdateDto.Id, userUpdateDto.FirstName, userUpdateDto.LastName);
-                var updatedAuth = await UpdateAuthEntityAsync(userUpdateDto.Id, userUpdateDto.Email, userUpdateDto.Password);
-                _result.Status = updatedAuth ? ResultStatus.Updated : ResultStatus.AlreadyExist;
-            }
+           
+            
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); _result.Status = ResultStatus.Failed; }
         return _result;
@@ -219,6 +263,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
         {
             var newProfileEntity = await _profileRepository.UpdateAsync(x => x.UserId == userId, new ProfileEntity
             {
+                UserId = userId,
                 FirstName = firstName,
                 LastName = lastName,
             });
@@ -237,6 +282,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 var auth = await _authenticationRepository.GetOneAsync(x => x.UserId == userId);
                 if (auth != null)
                 {
+                    auth.UserId = userId;
                     auth.Email = email;
 
                     if (password != null)
