@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Contexts;
 using Infrastructure.Entities.UserEntities;
-using Infrastructure.Interfaces;
 using Shared.Interfaces;
 
 namespace Infrastructure.Repositories.UserRepositories;

@@ -1,6 +1,5 @@
 ﻿using Infrastructure.Contexts;
 using Infrastructure.Entities.UserEntities;
-using Infrastructure.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Shared.Interfaces;
 using System.Linq.Expressions;

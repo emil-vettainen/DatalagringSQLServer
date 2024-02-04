@@ -693,6 +693,4 @@ public class UserService_Tests
         Assert.True(isValid);
     }
 
-
-
 }

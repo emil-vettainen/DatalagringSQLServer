@@ -1,5 +1,4 @@
-﻿using Business.Dtos.ProductDtos;
-using Business.Services.ProductServices;
+﻿using Business.Services.ProductServices;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Presentation.MAUI.Mvvm.Models.ProductModels;
@@ -31,13 +30,11 @@ public partial class ProductViewModel : ObservableObject
     [ObservableProperty]
     ObservableCollection<ProductModel> _productsList = [];
 
-
     [RelayCommand]
     async Task GoToAddProduct()
     {
         await Shell.Current.GoToAsync($"{nameof(AddProductPage)}");
     }
-
 
     [RelayCommand]
     async Task GoToProductDetail(string articleNumber)
@@ -48,38 +45,8 @@ public partial class ProductViewModel : ObservableObject
         }
     }
 
-
     [ObservableProperty]
     ObservableCollection<ProductGroup> _groupedProductList = [];
-
-
-
-    //public async Task LoadProducts()
-    //{
-    //    ProductsList.Clear();
-
-    //    var productDtos = await _productService.GetAllProductsAsync();
-    //    foreach (var dto in productDtos)
-    //    {
-    //        var model = new ProductModel
-    //        {
-    //            ArticleNumber = dto.ArticleNumber,
-    //            Title = dto.Title,
-    //            Description = dto.Description,
-    //            CategoryName = dto.CategoryName,
-    //            SubCategoryName = dto.SubCategoryName,
-    //            Manufacture = dto.ManufactureName,
-    //            Specification = dto.Specification,
-    //            Price = dto.Price,
-
-
-    //        };
-
-
-    //        ProductsList.Add(model);
-    //    }
-
-    //}
 
     [ObservableProperty]
     ProductGroup _group = [];
@@ -112,13 +79,8 @@ public partial class ProductViewModel : ObservableObject
 
                     });
                 }
-
                 return productGroup;
             });
-
         GroupedProductList = new ObservableCollection<ProductGroup>(groupedData);
     }
-
-
-
 }

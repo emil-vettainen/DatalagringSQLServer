@@ -23,7 +23,6 @@ public partial class EditProductViewModel : ObservableObject
     [ObservableProperty]
     private ProductModel? _updateDetail;
 
-
     public async Task ShowEditProductDetails()
     {
         if (ArticleNumber != null)
@@ -43,7 +42,6 @@ public partial class EditProductViewModel : ObservableObject
                     Manufacture = productDetail.Manufacture,
                     Price = productDetail.Price,
                 };
-
                 UpdateDetail = detail;
             }
         }
@@ -60,8 +58,6 @@ public partial class EditProductViewModel : ObservableObject
             !string.IsNullOrWhiteSpace(UpdateDetail.Specification))
 
         {
-
-
             var result = await _productService.UpdateProductAsync(new ProductDto
             {
                 ArticleNumber = UpdateDetail.ArticleNumber,
@@ -77,20 +73,13 @@ public partial class EditProductViewModel : ObservableObject
             switch (result.Status)
             {
                 case ResultStatus.Updated:
-
-
                     await Shell.Current.DisplayAlert("Updated!", "Product was updated", "Ok");
-
                     break;
 
-
-
                 default:
-
                     await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
                     break;
             }
-
         }
         else
         {
@@ -106,7 +95,6 @@ public partial class EditProductViewModel : ObservableObject
            "Ok");
         }
     }
-
 
     [RelayCommand]
     async Task DeleteProduct()

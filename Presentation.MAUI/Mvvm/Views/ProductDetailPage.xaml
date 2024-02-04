@@ -56,14 +56,6 @@
             <Label Text="{Binding ProductDetail.Manufacture}"/>
 
 
-
-
-
-
-
         </VerticalStackLayout>
     </ScrollView>
-
-
-   
 </ContentPage>

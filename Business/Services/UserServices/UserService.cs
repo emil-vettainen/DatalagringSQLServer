@@ -279,7 +279,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
 
 
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserAsync"); return new ServiceResult { Status = ResultStatus.Failed }; }
-     
     }
 
     public async Task<bool> UpdateUserEntityAsync(Guid userId, int roleId, int addressId)
@@ -297,8 +296,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 });
                 return newUserEntity != null;
             }
-
-           
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - UpdateUserEntityAsync"); }
         return false;

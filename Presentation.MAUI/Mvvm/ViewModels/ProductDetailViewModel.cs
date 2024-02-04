@@ -23,10 +23,6 @@ public partial class ProductDetailViewModel : ObservableObject
     [ObservableProperty]
     private ProductModel? _productDetail;
 
-
-
-
-
     public async Task ShowProductDetails()
     {
         if (ArticleNumber != null)
@@ -46,7 +42,6 @@ public partial class ProductDetailViewModel : ObservableObject
                     Manufacture = productDetail.Manufacture,
                     Price = productDetail.Price,
                 };
-
                 ProductDetail = detail;
             }
         }
@@ -60,9 +55,5 @@ public partial class ProductDetailViewModel : ObservableObject
         {
             await Shell.Current.GoToAsync($"/EditProductPage?ArticleNumber={ArticleNumber}");
         }
-
     }
-
-
-
 }

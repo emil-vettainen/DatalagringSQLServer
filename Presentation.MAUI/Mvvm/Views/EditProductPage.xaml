@@ -18,8 +18,6 @@
                 <Label  Text="{Binding UpdateDetail.ArticleNumber}"/>
             </HorizontalStackLayout>
 
-           
-
             <Label  Text="Category: *" Margin="0,5,0,5"/>
             <Entry Text="{Binding UpdateDetail.CategoryName}"/>
 
@@ -45,6 +43,4 @@
             <Button Margin="0,10,0,0" FontSize="18" Background="#ff3126" Grid.Column="1" Text="Delete" Command="{Binding DeleteProductCommand}"/>
         </VerticalStackLayout>
     </ScrollView>
-    
-    
 </ContentPage>

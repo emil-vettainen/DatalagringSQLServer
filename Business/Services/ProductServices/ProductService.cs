@@ -64,30 +64,6 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                 UpdateProductList?.Invoke(this, EventArgs.Empty);
                 return new ServiceResult { Status = ResultStatus.Successed };
             }
-           
-
-
-
-            //if (await _productRepository.ExistsAsync(x => x.ArticleNumber == dto.ArticleNumber))
-            //{
-            //    _result.Status = ResultStatus.AlreadyExist;
-            //}
-
-            //var manufactureId = await GetOrCreateManufactureAsync(dto.Manufacture);
-            //var categoryId = await GetOrCreateCategoryAsync(dto.CategoryName);
-
-            //if (manufactureId == 0 || categoryId == 0)
-            //{
-            //    _result.Status = ResultStatus.Failed;
-            //}
-
-            //await CreateProductEntityAsync(dto.ArticleNumber, manufactureId, categoryId);
-            //await CreateProductInfoEntityAsync(dto.ArticleNumber, dto.ProductTitle, dto.Ingress, dto.Description, dto.Specification);
-            //await CreateProductPriceEntityAsync(dto.ArticleNumber, dto.Price);
-
-            //UpdateProductList?.Invoke(this, EventArgs.Empty);
-            //_result.Status = ResultStatus.Successed;
-
         }
         catch (Exception ex){ _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProduktAsync"); return new ServiceResult { Status = ResultStatus.Failed };}
     }
@@ -111,7 +87,6 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                     return createdManufacture.Id;
                 }
             }
-
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - GetOrCreateManufactureAsync"); }
         return 0;
@@ -161,7 +136,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         return false;
     }
     
-    private async Task<bool> CreateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
+    public async Task<bool> CreateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
     {
         try
         {
@@ -182,7 +157,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         return false;
     }
 
-    private async Task<bool> CreateProductPriceEntityAsync(string articleNumber, decimal price)
+    public async Task<bool> CreateProductPriceEntityAsync(string articleNumber, decimal price)
     {
         try
         {
@@ -217,22 +192,6 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
                 Manufacture = x.Manufacture.ManufactureName,
                 Price = x.ProductPriceEntity.Price,
             });
-
-            //var productDto = products.Select(x =>
-            //{
-            //    return new ProductDto
-            //    {
-            //        CategoryName = x.Category.CategoryName,
-            //        ArticleNumber = x.ArticleNumber,
-            //        ProductTitle = x.ProductInfoEntity.ProductTitle,
-            //        Ingess = x.ProductInfoEntity.Ingress,
-            //        Description = x.ProductInfoEntity.Description,
-            //        Specification = x.ProductInfoEntity.Specification,
-            //        Manufacture = x.Manufacture.ManufactureName,
-            //        Price = x.ProductPriceEntity.Price,
-            //    };
-            //});
-            //return productDto;
         }
         return Enumerable.Empty<ProductDto>();
     }
@@ -300,7 +259,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductAsync"); return new ServiceResult { Status = ResultStatus.Failed }; }
     }
 
-    private async Task<bool> UpdateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
+    public async Task<bool> UpdateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
     {
         try
         {
@@ -342,7 +301,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         return false;
     }
 
-    private async Task<bool> UpdateProductPriceEntityAsync(string articleNumber, decimal price)
+    public async Task<bool> UpdateProductPriceEntityAsync(string articleNumber, decimal price)
     {
         try
         {
@@ -359,11 +318,6 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductPriceEntityAsync"); }
         return false;
     }
-
-
-
-
-
 
     public async Task<IServiceResult> DeleteProductByArticleNumberAsync(string articleNumber)
     {
