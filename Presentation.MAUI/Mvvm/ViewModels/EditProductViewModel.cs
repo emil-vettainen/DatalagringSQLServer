@@ -113,8 +113,25 @@ public partial class EditProductViewModel : ObservableObject
     {
         if (ArticleNumber != null)
         {
-            await _productService.DeleteProductByArticleNumberAsync(ArticleNumber);
-            await Shell.Current.GoToAsync("../..");
+            var answer = await Shell.Current.DisplayAlert("Warning!", "Are you sure you want to delete?\nThis action cannot be undone.", "Ok", "Cancel");
+            if (answer)
+            {
+                var result = await _productService.DeleteProductByArticleNumberAsync(ArticleNumber);
+                switch (result.Status)
+                {
+                    case ResultStatus.Deleted:
+                        await Shell.Current.GoToAsync("../..");
+                        break;
+
+                    default:
+                        await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
+                        break;
+                }
+            }
+        }
+        else
+        {
+            await Shell.Current.DisplayAlert("Something went wrong!", "Please try again", "Ok");
         }
     }
 }
