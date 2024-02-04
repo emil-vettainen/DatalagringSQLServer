@@ -38,16 +38,7 @@ public class UserDetailsModel : INotifyPropertyChanged
             RaisePropertyChanged(nameof(Email));
         }
     }
-    private string _Password = null!;
-    public string Password
-    {
-        get { return _Password; }
-        set
-        {
-            _Password = value;
-            RaisePropertyChanged(nameof(Password));
-        }
-    }
+   
     private string? _StreetName;
     public string? StreetName
     {

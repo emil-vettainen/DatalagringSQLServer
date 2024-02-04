@@ -6,6 +6,7 @@ namespace Infrastructure.Entities.UserEntities;
 public class UserEntity
 {
     [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.None)]
     public Guid Id { get; set; }
 
     [Required]

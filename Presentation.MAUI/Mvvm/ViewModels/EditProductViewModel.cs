@@ -52,26 +52,26 @@ public partial class EditProductViewModel : ObservableObject
     [RelayCommand]
     async Task UpdateProduct()
     {
-        if (!string.IsNullOrWhiteSpace(UpdateDetail.CategoryName) &&
-            !string.IsNullOrWhiteSpace(UpdateDetail.ArticleNumber) &&
+        if (!string.IsNullOrWhiteSpace(UpdateDetail!.CategoryName) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.ProductTitle) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.Ingress) &&
             !string.IsNullOrWhiteSpace(UpdateDetail.Description) &&
+            UpdateDetail.Price != 0 &&
             !string.IsNullOrWhiteSpace(UpdateDetail.Specification))
 
         {
 
+
             var result = await _productService.UpdateProductAsync(new ProductDto
             {
-                CategoryName = UpdateDetail.CategoryName,
                 ArticleNumber = UpdateDetail.ArticleNumber,
+                CategoryName = UpdateDetail.CategoryName,
                 ProductTitle = UpdateDetail.ProductTitle,
                 Ingress = UpdateDetail.Ingress,
                 Description = UpdateDetail.Description,
                 Specification = UpdateDetail.Specification,
                 Manufacture = UpdateDetail.Manufacture,
                 Price = UpdateDetail.Price,
-
             });
 
             switch (result.Status)
@@ -92,6 +92,19 @@ public partial class EditProductViewModel : ObservableObject
             }
 
         }
+        else
+        {
+            await Shell.Current.DisplayAlert
+           ("Something went wrong!",
+           "Category is required\n" +
+           "ProductTitle is required\n" +
+           "Ingress is required\n" +
+           "Description is required\n" +
+           "Specification is required\n" +
+           "Manufacture is required\n" +
+           "Price must be bigger then 0\n",
+           "Ok");
+        }
     }
 
 
@@ -104,6 +117,4 @@ public partial class EditProductViewModel : ObservableObject
             await Shell.Current.GoToAsync("../..");
         }
     }
-
-
 }

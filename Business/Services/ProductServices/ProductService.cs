@@ -55,7 +55,16 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
             }
 
             var productPrice = await CreateProductPriceEntityAsync(dto.ArticleNumber, dto.Price);
-            return new ServiceResult { Status = productPrice ? ResultStatus.Successed : ResultStatus.Failed };
+            if (!productPrice)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+            else
+            {
+                UpdateProductList?.Invoke(this, EventArgs.Empty);
+                return new ServiceResult { Status = ResultStatus.Successed };
+            }
+           
 
 
 
@@ -83,7 +92,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         catch (Exception ex){ _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProduktAsync"); return new ServiceResult { Status = ResultStatus.Failed };}
     }
 
-    private async Task<int> GetOrCreateManufactureAsync(string manufacture)
+    public async Task<int> GetOrCreateManufactureAsync(string manufacture)
     {
         try
         {
@@ -108,7 +117,7 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         return 0;
     }
 
-    private async Task<int> GetOrCreateCategoryAsync(string categoryName)
+    public async Task<int> GetOrCreateCategoryAsync(string categoryName)
     {
         try
         {
@@ -132,11 +141,11 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         return 0;
     }
 
-    private async Task<bool> CreateProductEntityAsync(string articleNumber, int manufactureId, int categoryId)
+    public async Task<bool> CreateProductEntityAsync(string articleNumber, int manufactureId, int categoryId)
     {
         try
         {
-            if(articleNumber != null &&  manufactureId != 0 && categoryId != 0) 
+            if(articleNumber != null && manufactureId != 0 && categoryId != 0) 
             {
                 var result = await _productRepository.CreateAsync(new ProductEntity
                 {
@@ -179,14 +188,13 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         {
             if(articleNumber != null && price != 0)
             {
-               var result = await _productPriceRepository.CreateAsync(new ProductPriceEntity
+                var result = await _productPriceRepository.CreateAsync(new ProductPriceEntity
                 {
                     ArticleNumber = articleNumber,
                     Price = price,
                 });
                 return result != null;
             }
-           
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - CreateProductPriceAsync"); }
         return false;
@@ -255,54 +263,80 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
         try
         {
             var manufactureId = await GetOrCreateManufactureAsync(productDto.Manufacture);
-            var categoryId = await GetOrCreateCategoryAsync(productDto.CategoryName);
-
-            if(manufactureId == 0 || categoryId == 0)
+            if(manufactureId == 0)
             {
-                _result.Status = ResultStatus.Failed;
+                return new ServiceResult { Status = ResultStatus.Failed };
             }
-            await UpdateProductEntityAsync(productDto.ArticleNumber, manufactureId, categoryId);
-            await UpdateProductInfoEntityAsync(productDto.ArticleNumber, productDto.ProductTitle, productDto.Ingress, productDto.Description, productDto.Specification);
-            await UpdateProductPriceEntityAsync(productDto.ArticleNumber, productDto.Price);
 
-            UpdateProductList?.Invoke(this, EventArgs.Empty);
-            _result.Status = ResultStatus.Updated;
+            var categoryId = await GetOrCreateCategoryAsync(productDto.CategoryName);
+            if(categoryId == 0)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+
+            var updatedProductEntity = await UpdateProductEntityAsync(productDto.ArticleNumber, manufactureId, categoryId);
+            if (!updatedProductEntity)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+
+            var updatedProductInfoEntity = await UpdateProductInfoEntityAsync(productDto.ArticleNumber, productDto.ProductTitle, productDto.Ingress, productDto.Description, productDto.Specification);
+            if (!updatedProductInfoEntity)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+
+            var updatedProductPriceEntity = await UpdateProductPriceEntityAsync(productDto.ArticleNumber, productDto.Price);
+            if (!updatedProductPriceEntity)
+            {
+                return new ServiceResult { Status = ResultStatus.Failed };
+            }
+            else
+            {
+                UpdateProductList?.Invoke(this, EventArgs.Empty);
+                return new ServiceResult { Status = ResultStatus.Updated };
+            }
         }
-        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductAsync"); _result.Status = ResultStatus.Failed; }
-        return _result;
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductAsync"); return new ServiceResult { Status = ResultStatus.Failed }; }
     }
 
     private async Task<bool> UpdateProductInfoEntityAsync(string articleNumber, string productTitle, string ingress, string description, string specification)
     {
         try
         {
-            var newProductInfoEntity = await _productInfoRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, new ProductInfoEntity
+            if(articleNumber != null && productTitle != null && ingress != null && description != null && specification != null)
             {
-                ArticleNumber = articleNumber,
-                ProductTitle = productTitle,
-                Ingress = ingress,
-                Description = description,
-                Specification = specification
+                var newProductInfoEntity = await _productInfoRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, new ProductInfoEntity
+                {
+                    ArticleNumber = articleNumber,
+                    ProductTitle = productTitle,
+                    Ingress = ingress,
+                    Description = description,
+                    Specification = specification
 
-            });
-            return newProductInfoEntity != null;
+                });
+                return newProductInfoEntity != null;
+            }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductInfoEntityAsync"); }
         return false;
     }
 
-    private async Task<bool> UpdateProductEntityAsync(string articleNumber, int manufactureId, int categoryId)
+    public async Task<bool> UpdateProductEntityAsync(string articleNumber, int manufactureId, int categoryId)
     {
         try
         {
-            var newProductEntity = await _productRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, new ProductEntity
+            if(articleNumber != null && manufactureId != 0 && categoryId != 0)
             {
-                ArticleNumber = articleNumber,
-                Modified = DateTime.Now,
-                ManufactureId = manufactureId,
-                CategoryId = categoryId,
-            });
-            return newProductEntity != null;
+                var newProductEntity = await _productRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, new ProductEntity
+                {
+                    ArticleNumber = articleNumber,
+                    Modified = DateTime.Now,
+                    ManufactureId = manufactureId,
+                    CategoryId = categoryId,
+                });
+                return newProductEntity != null;
+            }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductEntityAsync"); }
         return false;
@@ -312,16 +346,24 @@ public class ProductService(CategoryRepository categoryRepository, ProductReposi
     {
         try
         {
-            var newProductPriceEntity = await _productPriceRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, new ProductPriceEntity
+            if(articleNumber != null && price != 0)
             {
-                ArticleNumber = articleNumber,
-                Price = price  
-            });
-            return newProductPriceEntity != null;
+                var newProductPriceEntity = await _productPriceRepository.UpdateAsync(x => x.ArticleNumber == articleNumber, new ProductPriceEntity
+                {
+                    ArticleNumber = articleNumber,
+                    Price = price
+                });
+                return newProductPriceEntity != null;
+            }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "ProductService - UpdateProductPriceEntityAsync"); }
         return false;
     }
+
+
+
+
+
 
     public async Task<IServiceResult> DeleteProductByArticleNumberAsync(string articleNumber)
     {

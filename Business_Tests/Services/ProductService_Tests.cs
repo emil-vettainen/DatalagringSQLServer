@@ -54,7 +54,104 @@ public class ProductService_Tests
         Assert.Equal(ResultStatus.Successed, result.Status);  
     }
 
+    [Fact]
+    public async Task CreateProduct_ShouldNotCreateOneProductIfNoArticleNumber_ReturnFailed()
+    {
+        // Arrange
+        var product = new CreateProductDto
+        {
+            ArticleNumber = null!,
+            CategoryName = "Category",
+            ProductTitle = "Title",
+            Ingress = "Ingress",
+            Description = "Description",
+            Specification = "Specification",
+            Manufacture = "Manufacture",
+            Price = 9999
+        };
 
+        // Act
+        var result = await _productService.CreateProduktAsync(product);
+
+        // Assert
+        Assert.Equal(ResultStatus.Failed, result.Status);
+    }
+
+
+
+
+    [Fact]
+    public async Task UpdateProductAsync_ShouldUpdateAllDetailsOfProduct_ReturnUpdated()
+    {
+        // Arrange
+        var product = await _productService.CreateProduktAsync(new CreateProductDto
+        {
+            ArticleNumber = "12345",
+            CategoryName = "Category",
+            ProductTitle = "Title",
+            Ingress = "Ingress",
+            Description = "Description",
+            Specification = "Spec",
+            Manufacture = "Manufacture",
+            Price = 999
+        });
+
+        // Act
+        var result = await _productService.UpdateProductAsync(new ProductDto
+        {
+            ArticleNumber = "12345",
+            CategoryName = "Annan",
+            ProductTitle = "AnnanTitle",
+            Ingress = "Ingress2",
+            Description = "Description2",
+            Specification = "Spec2",
+            Manufacture = "Manufacture2",
+            Price = 111
+        });
+
+        var updatedProduct = await _productService.GetOneProductAsync("12345");
+
+        // Assert
+        Assert.Equal(ResultStatus.Updated, result.Status);
+        Assert.Equal("Annan", updatedProduct.CategoryName);
+    }
+
+
+    [Fact]
+    public async Task UpdateProductAsync_ShouldNotUpdateAllDetailsOfProductIfNoArticleNumber_ReturnFailed()
+    {
+        // Arrange
+        var product = await _productService.CreateProduktAsync(new CreateProductDto
+        {
+            ArticleNumber = "12345",
+            CategoryName = "Category",
+            ProductTitle = "Title",
+            Ingress = "Ingress",
+            Description = "Description",
+            Specification = "Spec",
+            Manufacture = "Manufacture",
+            Price = 999
+        });
+
+        // Act
+        var result = await _productService.UpdateProductAsync(new ProductDto
+        {
+            ArticleNumber = null!,
+            CategoryName = "Annan",
+            ProductTitle = "AnnanTitle",
+            Ingress = "Ingress2",
+            Description = "Description2",
+            Specification = "Spec2",
+            Manufacture = "Manufacture2",
+            Price = 111
+        });
+
+        var updatedProduct = await _productService.GetOneProductAsync("12345");
+
+        // Assert
+        Assert.Equal(ResultStatus.Failed, result.Status);
+       
+    }
 
 
 }

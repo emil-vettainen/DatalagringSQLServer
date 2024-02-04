@@ -18,6 +18,22 @@ public class UserRepository : BaseRepository<UserEntity, UserDataContext>
         _errorLogger = errorLogger;
     }
 
+    public override async Task<UserEntity> CreateAsync(UserEntity entity)
+    {
+        try
+        {
+            if(entity.Id != Guid.Empty && entity.RoleId != 0 && entity.AddressId != 0)
+            {
+                _context.Set<UserEntity>().Add(entity);
+                await _context.SaveChangesAsync();
+                return entity;
+            }
+           
+        }
+        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - CreateAsync"); }
+        return null!;
+    }
+
     public override async Task<UserEntity> GetOneAsync(Expression<Func<UserEntity, bool>> predicate)
     {
         try

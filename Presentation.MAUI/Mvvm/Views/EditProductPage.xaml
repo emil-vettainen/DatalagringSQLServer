@@ -13,12 +13,15 @@
 
     <ScrollView>
         <VerticalStackLayout Margin="20">
+            <HorizontalStackLayout Spacing="10">
+                <Label  Text="Articlenumber:" Margin="0,0,0,5"/>
+                <Label  Text="{Binding UpdateDetail.ArticleNumber}"/>
+            </HorizontalStackLayout>
 
-            <Label  Text="Category: *" Margin="0,0,0,5"/>
+           
+
+            <Label  Text="Category: *" Margin="0,5,0,5"/>
             <Entry Text="{Binding UpdateDetail.CategoryName}"/>
-
-            <Label  Text="Articlenumber:" Margin="0,5,0,5"/>
-            <Entry  Text="{Binding UpdateDetail.ArticleNumber}"/>
 
             <Label  Text="Product title: *" Margin="0,5,0,5"/>
             <Entry  Text="{Binding UpdateDetail.ProductTitle}"/>
@@ -29,7 +32,7 @@
             <Label  Text="Description: *" Margin="0,5,0,5"/>
             <Editor  Text="{Binding UpdateDetail.Description}" HeightRequest="100" AutoSize="TextChanges"/>
 
-            <Label  Text="Spec: *" Margin="0,5,0,5"/>
+            <Label  Text="Specification: *" Margin="0,5,0,5"/>
             <Entry  Text="{Binding UpdateDetail.Specification}"/>
 
             <Label  Text="Manufacture: *" Margin="0,5,0,5"/>

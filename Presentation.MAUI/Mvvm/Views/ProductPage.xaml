@@ -10,35 +10,22 @@
              Title="Products">
 
 
+    <ContentPage.Resources>
+        <x:String x:Key="add">&#x2b;</x:String>
+        <x:String x:Key="edit">&#xf044;</x:String>
+    </ContentPage.Resources>
+
     <ContentPage.ToolbarItems >
-        <ToolbarItem Command="{Binding GoToAddProductCommand}" Text="Add Product">
-            
+        <ToolbarItem Command="{Binding GoToAddProductCommand}" Text="ADD">
+            <ToolbarItem.IconImageSource>
+                <FontImageSource FontFamily="FAS" Glyph="{StaticResource add}" Color="#9880e5"/>
+            </ToolbarItem.IconImageSource>
         </ToolbarItem>
     </ContentPage.ToolbarItems>
 
 
 
     <Grid RowDefinitions="auto, *" Margin="10">
-
-        <!--<StackLayout Orientation="Horizontal" Margin="6,6,6,8">
-
-            <Label Text="Products" 
-            Margin="8,8,8,0"
-            FontSize="Medium"
-            TextColor="DarkGray"
-            FontAttributes="Bold"/>
-
-            <Label HorizontalOptions="EndAndExpand"
-            Text="See All" 
-            FontAttributes="Bold"
-            Margin="0,8,8,0" 
-            FontSize="16"
-            TextColor="DarkGray"/>
-
-        </StackLayout>-->
-
-
-
         <CollectionView ItemsSource="{Binding GroupedProductList}" Grid.Row="1" IsGrouped="True">
 
             <CollectionView.GroupHeaderTemplate>
@@ -56,8 +43,8 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="models:ProductModel">
                     <Frame BackgroundColor="#8c92ac"  Padding="0" Margin="0">
-                        
-                        
+
+
                         <Frame.GestureRecognizers>
                             <TapGestureRecognizer CommandParameter="{Binding ArticleNumber}"
                                                   Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodels:ProductViewModel}}, Path=GoToProductDetailCommand}"/>
@@ -69,77 +56,26 @@
                                 <RowDefinition Height="auto" />
                             </Grid.RowDefinitions>
 
-                            <Image Source="dotnet_bot.png"
-                               VerticalOptions="Start"
-                               Aspect="AspectFit"
-                               HeightRequest="110"
-                               
-                               
-                             
-                               />
+                            <Image Source="dotnet_bot.png" VerticalOptions="Start" Aspect="AspectFit" HeightRequest="110"/>
 
+                            <StackLayout Grid.Row="1" Margin="20" Orientation="Vertical">
 
-                          
+                                <Label VerticalOptions="Center" Text="{Binding ProductTitle}" FontAttributes="Bold" TextColor="black" />
 
-                            <StackLayout Grid.Row="1"
-                               Margin="20"
-                               Orientation="Vertical">
-
-                              
-
-                                
-
-                                <Label VerticalOptions="Center"
-                                    Text="{Binding ProductTitle}"
-                                    FontAttributes="Bold" 
-                                    TextColor="black"
-                                       />
-
-                                <Label Text="{Binding Specification}"
-                                   VerticalOptions="Start"
-                                   TextColor="black"
-                                   FontAttributes="Italic" />
+                                <Label Text="{Binding Specification}" VerticalOptions="Start" TextColor="black" FontAttributes="Italic" />
 
                                 <StackLayout >
                                     <Label Text="{Binding Price ,StringFormat='{0:N2} SEK'}"
                                         HorizontalOptions="End"
                                         TextColor="black"
-                                        FontAttributes="Italic" />
-
+                                        FontAttributes="Italic"
+                                        Margin="0,10,0,0"   />
                                 </StackLayout>
-
-                               
-
-
                             </StackLayout>
-
-                            
-
-
-
-
                         </Grid>
                     </Frame>
-
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
-
     </Grid>
-
-        
-            
-            
-           
-
-
-
-
-
-
-      
-   
-
-
 </ContentPage>

@@ -14,14 +14,12 @@ namespace Business.Services.UserServices;
 
 public class UserService(UserRepository userRepository, RoleRepository roleRepository, AuthenticationRepository authenticationRepository, ProfileRepository profileRepository, AddressRepository addressRepository, IErrorLogger errorLogger)
 {
-
     private readonly UserRepository _userRepository = userRepository;
     private readonly RoleRepository _roleRepository = roleRepository;
     private readonly AuthenticationRepository _authenticationRepository = authenticationRepository;
     private readonly ProfileRepository _profileRepository = profileRepository;
     private readonly AddressRepository _addressRepository = addressRepository;
     private readonly IErrorLogger _errorLogger = errorLogger;
-
     private readonly IServiceResult _result = new ServiceResult();
 
 
@@ -79,6 +77,7 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
             {
                 return new ServiceResult { Status = ResultStatus.Failed };
             }
+
             var profileEntity = await CreateProfileEntityAsync(userRegisterDto, userEntity.Id);
             if(!profileEntity)
             {
@@ -176,7 +175,6 @@ public class UserService(UserRepository userRepository, RoleRepository roleRepos
                 };
                 return await _userRepository.CreateAsync(userEntity);
             }
-           
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "UserService - CreateUserEntityAsync"); }
         return null!;
