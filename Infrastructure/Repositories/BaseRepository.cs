@@ -28,8 +28,6 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
         return false;
     }
 
-
-
     public virtual async Task<TEntity> CreateAsync(TEntity entity)
     {
         try
@@ -42,7 +40,6 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
         return null!;
     }
 
-   
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         try
@@ -54,20 +51,6 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
             }
         }
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - GetAllAsync"); }
-        return null!;
-    }
-
-    public virtual async Task<IEnumerable<TEntity>> GetTakeAsync(int take)
-    {
-        try
-        {
-            var entities = await _context.Set<TEntity>().Take(take).ToListAsync();
-            if (entities.Count != 0)
-            {
-                return entities;
-            }
-        }
-        catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - GetTakeAsync"); }
         return null!;
     }
 
@@ -100,7 +83,6 @@ public abstract class BaseRepository<TEntity, TContext> where TEntity : class wh
         catch (Exception ex) { _errorLogger.ErrorLog(ex.Message, "BaseRepo - UpdateAsync"); }
         return null!;
     }
-
 
     public virtual async Task<bool> DeleteAsync(Expression<Func<TEntity, bool>> predicate)
     {

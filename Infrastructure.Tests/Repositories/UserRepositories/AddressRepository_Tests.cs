@@ -2,30 +2,25 @@
 using Infrastructure.Entities.UserEntities;
 using Infrastructure.Repositories.UserRepositories;
 using Microsoft.EntityFrameworkCore;
+using Shared.Interfaces;
 using Shared.Utilis;
 
 namespace Infrastructure.Tests.Repositories.UserRepositories;
 
 public class AddressRepository_Tests
 {
-    private readonly UserDataContext _userDataContext;
-    private readonly AddressRepository _addressRepository;
-
-    public AddressRepository_Tests()
-    {
-        _userDataContext = new UserDataContext(new DbContextOptionsBuilder<UserDataContext>()
+    private readonly UserDataContext _userDataContext = new UserDataContext(new DbContextOptionsBuilder<UserDataContext>()
             .UseInMemoryDatabase($"{Guid.NewGuid()}")
             .Options);
 
-        var errorLogger = new ErrorLogger($"{Guid.NewGuid()}");
+   private readonly IErrorLogger _errorLogger = new ErrorLogger($"{Guid.NewGuid()}");
 
-        _addressRepository = new AddressRepository( _userDataContext, errorLogger);
-    }
 
     [Fact]
     public async Task CheckIfAddressExist_Should_ReturnTrueIfExsist()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = new AddressEntity
         {
             StreetName = "Gata",
@@ -45,6 +40,7 @@ public class AddressRepository_Tests
     public async Task CreateAddressEntity_ShouldSaveEntityToDatabase_ReturnAddressEntity()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = new AddressEntity
         {
             StreetName = "Skara",
@@ -64,6 +60,7 @@ public class AddressRepository_Tests
     public async Task CreateAddressEntity_ShouldNotSaveEntityToDatabase_ReturnNull()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = new AddressEntity {};
 
         // Act
@@ -77,6 +74,7 @@ public class AddressRepository_Tests
     public async Task GetAllAsync_ShouldGetAllRecords_ReturnIEnumerableOfTypeAddressEntity()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         await _addressRepository.CreateAsync(new AddressEntity
         {
             StreetName = "Skara",
@@ -97,6 +95,7 @@ public class AddressRepository_Tests
     public async Task GetOneAsync_ShouldGetOneAddressEntity_ReturnOneAddressEntity()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = await _addressRepository.CreateAsync(new AddressEntity
         {
             StreetName = "Skara",
@@ -117,6 +116,7 @@ public class AddressRepository_Tests
     public async Task GetOneAsync_ShouldNotFindAddressEntityFromDatabase_ReturnNull()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = new AddressEntity
         {
             Id = 1,
@@ -136,6 +136,7 @@ public class AddressRepository_Tests
     public async Task DeleteAsync_Should_RemoveOneAddress_ReturnTure()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = await _addressRepository.CreateAsync(new AddressEntity
         {
             StreetName = "Skara",
@@ -154,6 +155,7 @@ public class AddressRepository_Tests
     public async Task DeleteAsync_Should_NotRemoveOneAddress_ReturnFalse()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = await _addressRepository.CreateAsync(new AddressEntity
         {
             Id = 1,
@@ -173,6 +175,7 @@ public class AddressRepository_Tests
     public async Task UpdateAsync_Should_UpdateAddressentity_ReturnUpdatedAddressEntity()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var addressEntity = await _addressRepository.CreateAsync(new AddressEntity
         {
             Id = 1,
@@ -194,6 +197,7 @@ public class AddressRepository_Tests
     public async Task UpdateAsync_Should_NotUpdateAddressentity_IfNoNewAddressExists_ReturnNull()
     {
         // Arrange
+        var _addressRepository = new AddressRepository(_userDataContext, _errorLogger);
         var nonExistsingAddressId = 999;
         var addressEntityToUpdate = new AddressEntity
         {

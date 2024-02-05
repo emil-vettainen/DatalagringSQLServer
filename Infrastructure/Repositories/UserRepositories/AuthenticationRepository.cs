@@ -4,13 +4,8 @@ using Shared.Interfaces;
 
 namespace Infrastructure.Repositories.UserRepositories;
 
-public class AuthenticationRepository : BaseRepository<AuthenticationEntity, UserDataContext>
+public class AuthenticationRepository(UserDataContext context, IErrorLogger errorLogger) : BaseRepository<AuthenticationEntity, UserDataContext>(context, errorLogger)
 {
-    private readonly UserDataContext _context;
-    private readonly IErrorLogger _errorLogger;
-    public AuthenticationRepository(UserDataContext context, IErrorLogger errorLogger) : base(context, errorLogger)
-    {
-        _context = context;
-        _errorLogger = errorLogger;
-    }
+    private readonly UserDataContext _context = context;
+    private readonly IErrorLogger _errorLogger = errorLogger;
 }

@@ -18,7 +18,7 @@ public class RoleRepository_Tests
 
 
     [Fact]
-    public async Task CheckIfRoleExist_Should_ReturnTrueIfExsist_ElseReturnFalse()
+    public async Task CheckIfRoleExist_Should_ReturnTrueIfExsist()
     {
         // Arrange
         var roleRepository = new RoleRepository(_userDataContext, errorLogger);
