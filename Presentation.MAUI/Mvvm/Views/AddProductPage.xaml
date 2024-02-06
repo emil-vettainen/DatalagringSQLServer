@@ -13,7 +13,7 @@
     <ScrollView>
         <VerticalStackLayout Margin="20">
 
-            <Label  Text="Articlenumber:" Margin="0,0,0,5"/>
+            <Label  Text="Articlenumber: *" Margin="0,0,0,5"/>
             <Entry  Text="{Binding CreateProductModel.ArticleNumber}"/>
 
             <Label  Text="Category: *" Margin="0,5,0,5"/>
